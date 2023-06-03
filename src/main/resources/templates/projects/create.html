@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" layout:decorate="~{main-layout/mainLayout}"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{project.new}"></title>
+</head>
+<body>
+
+<div class="container">
+
+    <section layout:fragment="custom-content">
+
+        <h1 th:text="#{project.new}"></h1>
+
+        <form th:action="@{/projects/save}" th:object="${project}" method="post">
+
+            <div class="form-group mb-3">
+                <label for="project-creator" th:text="#{project.creator}"></label>
+
+                <select id="project-creator" th:field="*{creator}" class="form-control">
+                    <option th:each="person : ${people}"
+                            th:value="${person.id}"
+                            th:text="${person.realName}">
+                    </option>
+                </select>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="project-name" th:text="#{common.name}"></label>
+
+                <input type="text"
+                       th:class="'form-control' + ${#fields.hasErrors('name') ? ' is-invalid' : ''}"
+                       id="project-name"
+                       th:placeholder="#{project.name.long}"
+                       th:field="*{name}">
+
+                <!-- Wyświetlamy wszystkie błędy w polu name -->
+                <small th:errors="*{name}"
+                       th:if="${#fields.hasErrors('name')}"></small>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="project-description" th:text="#{common.description}"></label>
+
+                <textarea class="form-control" th:field="*{description}" id="project-description" rows="10"
+                          th:placeholder="#{common.description}"></textarea>
+
+            </div>
+
+            <div class="col mb-3">
+                <button type="submit" class="btn btn-primary mb-3" th:text="#{common.save}"></button>
+                <a class="btn btn-primary mb-3" onclick="history.back()" th:text="#{common.cancel}"></a>
+            </div>
+        </form>
+    </section>
+</div>
+</body>
+</html>
