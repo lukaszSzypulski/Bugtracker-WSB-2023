@@ -1,4 +1,4 @@
-package pl.wsb.bugtrucker.controllers;
+package pl.wsb.bugtracker.controllers;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -9,13 +9,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import wsb.bugtracker.filters.ProjectFilter;
-import wsb.bugtracker.models.Issue;
-import wsb.bugtracker.models.Person;
-import wsb.bugtracker.models.Project;
-import wsb.bugtracker.services.IssueService;
-import wsb.bugtracker.services.PersonService;
-import wsb.bugtracker.services.ProjectService;
+import pl.wsb.bugtracker.filters.ProjectFilter;
+import pl.wsb.bugtracker.models.Issue;
+import pl.wsb.bugtracker.models.Person;
+import pl.wsb.bugtracker.models.Project;
+import pl.wsb.bugtracker.services.IssueService;
+import pl.wsb.bugtracker.services.PersonService;
+import pl.wsb.bugtracker.services.ProjectService;
 
 import java.util.Date;
 import java.util.List;

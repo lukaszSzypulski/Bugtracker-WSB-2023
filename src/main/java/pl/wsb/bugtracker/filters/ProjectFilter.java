@@ -1,11 +1,11 @@
-package pl.wsb.bugtrucker.filters;
+package pl.wsb.bugtracker.filters;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
-import wsb.bugtracker.models.Person;
-import wsb.bugtracker.models.Project;
+import pl.wsb.bugtracker.models.Person;
+import pl.wsb.bugtracker.models.Project;
 
 @Data
 @NoArgsConstructor
