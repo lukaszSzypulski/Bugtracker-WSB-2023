@@ -1,8 +1,8 @@
-package pl.wsb.bugtrucker.filters;
+package pl.wsb.bugtracker.filters;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import wsb.bugtracker.models.*;
+import pl.wsb.bugtracker.models.*;
 
 @NoArgsConstructor
 @AllArgsConstructor

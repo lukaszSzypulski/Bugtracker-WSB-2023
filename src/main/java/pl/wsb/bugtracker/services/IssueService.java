@@ -1,9 +1,9 @@
-package pl.wsb.bugtrucker.services;
+package pl.wsb.bugtracker.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import wsb.bugtracker.models.Issue;
-import wsb.bugtracker.repositories.IssueRepository;
+import pl.wsb.bugtracker.models.Issue;
+import pl.wsb.bugtracker.repositories.IssueRepository;
 
 import java.util.List;
 import java.util.Optional;

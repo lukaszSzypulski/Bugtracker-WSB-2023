@@ -1,4 +1,4 @@
-package pl.wsb.bugtrucker.models;
+package pl.wsb.bugtracker.models;
 
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;

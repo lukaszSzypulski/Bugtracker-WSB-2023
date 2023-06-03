@@ -1,4 +1,4 @@
-package pl.wsb.bugtrucker.controllers;
+package pl.wsb.bugtracker.controllers;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -8,12 +8,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import wsb.bugtracker.filters.ProjectFilter;
-import wsb.bugtracker.models.Person;
-import wsb.bugtracker.models.Project;
-import wsb.bugtracker.services.MailService;
-import wsb.bugtracker.services.PersonService;
-import wsb.bugtracker.services.ProjectService;
+import pl.wsb.bugtracker.filters.ProjectFilter;
+import pl.wsb.bugtracker.models.Person;
+import pl.wsb.bugtracker.models.Project;
+import pl.wsb.bugtracker.services.MailService;
+import pl.wsb.bugtracker.services.PersonService;
+import pl.wsb.bugtracker.services.ProjectService;
 
 import java.util.List;
 import java.util.NoSuchElementException;
