@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" layout:decorate="~{main-layout/mainLayout}"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{issue.index}"></title>
+</head>
+<body>
+<div class="container">
+    <section layout:fragment="custom-content">
+        <div class="col">
+            <a class="btn btn-primary mb-3" type="submit" th:href="@{/issues/create}" th:text="#{issue.new}"></a>
+        </div>
+
+
+        <table class="table">
+            <tr>
+                <th th:text="#{common.id}"></th>
+                <th th:text="#{issue.status}"></th>
+                <th th:text="#{issue.priority}"></th>
+                <th th:text="#{issue.type}"></th>
+                <th th:text="#{issue.title}"></th>
+                <th th:text="#{issue.project}"></th>
+                <th th:text="#{issue.assignee}"></th>
+                <th th:text="#{common.edit}"></th>
+                <th th:text="#{common.remove}"></th>
+            </tr>
+
+            <tr th:each="iss: ${issue}">
+                <td th:text="${iss.id}"></td>
+                <td th:text="${iss.status}"></td>
+                <td th:text="${iss.priority}"></td>
+                <td th:text="${iss.type}"></td>
+                <td th:text="${iss.name}"></td>
+                <td th:text="${iss.project.getName()}"></td>
+                <td th:text="${iss.assignee.getRealName()}"></td>
+                <td><a th:href="@{/issues/edit/{id}(id=${iss.getId()})}" th:text="#{common.edit}"></a></td>
+                <td><a th:href="@{/issues/delete/{id}(id=${iss.getId()})}" th:text="#{common.remove}"></a></td>
+            </tr>
+        </table>
+    </section>
+</div>
+</body>
+</html>
