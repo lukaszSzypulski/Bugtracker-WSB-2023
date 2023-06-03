@@ -1,4 +1,4 @@
-package pl.wsb.bugtrucker.controllers;
+package pl.wsb.bugtracker.controllers;
 
 
 import jakarta.validation.Valid;
@@ -8,8 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import wsb.bugtracker.models.Person;
-import wsb.bugtracker.services.PersonService;
+import pl.wsb.bugtracker.models.Person;
+import pl.wsb.bugtracker.services.PersonService;
 
 import java.util.NoSuchElementException;
 

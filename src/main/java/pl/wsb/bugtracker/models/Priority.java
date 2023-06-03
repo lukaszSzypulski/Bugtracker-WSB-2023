@@ -1,4 +1,4 @@
-package pl.wsb.bugtrucker.models;
+package pl.wsb.bugtracker.models;
 
 public enum Priority {
     MINOR, NORMAL, MAJOR

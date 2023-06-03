@@ -1,4 +1,4 @@
-package pl.wsb.bugtrucker.models;
+package pl.wsb.bugtracker.models;
 
 public enum Type {
     BUG, TASK

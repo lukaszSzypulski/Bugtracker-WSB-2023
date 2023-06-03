@@ -1,12 +1,12 @@
-package pl.wsb.bugtrucker.services;
+package pl.wsb.bugtracker.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import wsb.bugtracker.models.Project;
-import wsb.bugtracker.repositories.ProjectRepository;
+import pl.wsb.bugtracker.models.Project;
+import pl.wsb.bugtracker.repositories.ProjectRepository;
 
 import java.util.Date;
 import java.util.Optional;
