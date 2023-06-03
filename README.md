@@ -1,1 +1,1 @@
-# BugTracker-WSB-2023
+# Bugtracker-WSB-2023
