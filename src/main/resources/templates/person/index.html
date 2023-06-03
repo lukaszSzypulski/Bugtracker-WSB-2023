@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" layout:decorate="~{main-layout/mainLayout}"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{user.new}">Użytkownicy</title>
+
+</head>
+<body>
+<div class="container">
+    <section layout:fragment="custom-content">
+        <div class="alert alert-danger"
+             role="alert"
+             th:text="${message}"
+             th:if="${message}">
+
+        </div>
+
+        <div class="col">
+            <a class="btn btn-primary mb-3 " type="submit" th:href="@{/person/create}" th:text="#{user.add}"></a>
+        </div>
+
+        <table class="table">
+            <tr>
+                <th th:text="#{common.id}"></th>
+                <th th:text="#{common.name}"></th>
+                <th th:text="#{user.edit}"></th>
+                <th th:text="#{common.edit}"></th>
+                <th th:text="#{common.remove}"></th>
+            </tr>
+            <tr th:each="person: ${people}">
+                <td th:text="${person.id}"></td>
+                <td th:text="${person.username}"></td>
+                <td th:text="${person.email}"></td>
+                <td><a th:href="@{/person/edit/{id}(id=${person.getId()})}" th:text="#{common.edit}"></a></td>
+                <td><a th:href="@{/person/delete/{id}(id=${person.getId()})}" th:text="#{common.remove}"></a></td>
+            </tr>
+        </table>
+
+
+    </section>
+</div>
+</body>
+</html>
