@@ -9,6 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import wsb.bugtracker.filters.ProjectFilter;
+import wsb.bugtracker.models.Mail;
 import wsb.bugtracker.models.Person;
 import wsb.bugtracker.models.Project;
 import wsb.bugtracker.services.MailService;
@@ -65,11 +66,24 @@ public class ProjectController {
             return modelAndView;
         }
 
-//        Person mailAddress = personService.findById(project.getCreator().getId()).get();
-//        String mail = mailAddress.getEmail();
-//        mailService.sendMail(mail);
+        Long aLong = projectService.saveAndReturnId(project);
 
-        projectService.save(project);
+        if (personService.findById(project.getCreator().getId()).isPresent()) {
+            String projectUrl = "http://localhost:8080/projects/getProject/" + aLong;
+
+            String emailAddress = personService.findById(project.getCreator().getId()).get().getEmail();
+            String emailSubject = "Dodano nowe zgloszenie numer: " + aLong;
+            String emailContent = "Zajmij sie nim niezwlocznie: " + "<a href='" + projectUrl + "'>" + "Link</a>";
+
+
+            Mail mail = new Mail();
+            mail.setRecipient(emailAddress);
+            mail.setSubject(emailSubject);
+            mail.setContent(emailContent);
+            mailService.sendMail(mail);
+
+        }
+
 
         return modelAndView;
     }
@@ -107,5 +121,18 @@ public class ProjectController {
         }
 
         return new ModelAndView("redirect:/projects");
+    }
+
+    @GetMapping("/getProject/{id}")
+    ModelAndView getProject(@PathVariable Long id) {
+
+        ModelAndView modelAndView = new ModelAndView("projects/view");
+
+        Project project = projectService.findById(id).get();
+
+        modelAndView.addObject(project);
+
+        return modelAndView;
+
     }
 }

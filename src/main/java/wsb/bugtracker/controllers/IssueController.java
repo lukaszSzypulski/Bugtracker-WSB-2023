@@ -77,7 +77,7 @@ public class IssueController {
             return modelAndView;
         }
         issue.setDateCreated(new Date());
-        issue.setLastUpdated(new Date());  //TODO: how to get id: Create issue with null field and then update ?
+        issue.setLastUpdated(new Date());
         issue.setCreator(issue.getAssignee()); ///TODO: logged person should be assignee as creator
         issueService.save(issue);
 
@@ -115,11 +115,20 @@ public class IssueController {
 
 
             issueService.save(oldIssue);
-        }
-        catch (NoSuchElementException e){
+        } catch (NoSuchElementException e) {
             e.printStackTrace();
         }
 
+        return modelAndView;
+    }
+
+    @GetMapping("/view/{id}")
+    ModelAndView view(@PathVariable Long id) {
+
+        ModelAndView modelAndView = new ModelAndView("issues/view");
+
+        Issue issue = issueService.findById(id).get();
+        modelAndView.addObject("issue", issue);
         return modelAndView;
     }
 
