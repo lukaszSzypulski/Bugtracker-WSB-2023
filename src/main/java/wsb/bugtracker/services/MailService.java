@@ -16,7 +16,7 @@ public class MailService {
 
 
     @Autowired
-    public MailService(JavaMailSender javaMailSender){
+    public MailService(JavaMailSender javaMailSender) {
         this.javaMailSender = javaMailSender;
     }
 
@@ -27,14 +27,12 @@ public class MailService {
 
             mimeMessageHelper.setTo(mail.getRecipient());
             mimeMessageHelper.setSubject(mail.getSubject());
-            mimeMessageHelper.setText(mail.getContent());
-
-            mimeMessageHelper.addAttachment(mail.getAttachment().getOriginalFilename(), mail.getAttachment());
+            mimeMessageHelper.setText(mail.getContent(), true);
 
             javaMailSender.send(mimeMessage);
 
         } catch (Exception e) {
-            log.info("Nie udalo sie wyslac wiadomosci");
+            log.info("Nie udalo sie wyslac wiadomosci: {}", e.toString());
         }
 
     }

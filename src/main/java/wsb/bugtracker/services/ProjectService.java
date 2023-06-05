@@ -31,5 +31,16 @@ public class ProjectService {
         projectRepository.deleteById(id);
     }
 
-    public Optional<Project> findById(Long id) {return projectRepository.findById(id);}
+    public Optional<Project> findById(Long id) {
+        return projectRepository.findById(id);
+    }
+
+
+    public Long saveAndReturnId(Project project) {
+        if (project.getDateCreated() == null) {
+            project.setDateCreated(new Date());
+        }
+        projectRepository.save(project);
+        return projectRepository.findById(project.getId()).get().getId();
+    }
 }

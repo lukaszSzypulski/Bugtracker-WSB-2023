@@ -50,6 +50,8 @@
                 <p class="card-text" th:text="${project.getDescription()}"></p>
                 <a class="btn btn-outline-primary btn-sm" th:href="@{/projects/edit/{id}(id=${project.getId()})}" th:text="#{common.edit}"></a>
                 <a class="btn btn-outline-danger btn-sm" th:href="@{/projects/delete/{id}(id=${project.getId()})}" th:text="#{common.remove}"></a>
+                <a class="btn btn-primary" th:href="@{/projects/getProject/{id}(id=${project.getId()})}"
+                   th:text="Wyświetl"></a>
             </div>
         </div>
     </section>
