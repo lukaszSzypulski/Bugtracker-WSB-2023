@@ -51,12 +51,23 @@
         <div class="card mt-4" th:each="project : ${projects}">
             <h5 class="card-header" th:text="${project.getName()}"></h5>
 
+
             <div class="card-body">
-                <p class="card-text" th:text="${project.getDescription()}"></p>
-                <a class="btn btn-outline-primary btn-sm" th:href="@{/projects/edit/{id}(id=${project.getId()})}" th:text="#{common.edit}"></a>
-                <a class="btn btn-outline-danger btn-sm" th:href="@{/projects/delete/{id}(id=${project.getId()})}" th:text="#{common.remove}"></a>
-                <a class="btn btn-primary" th:href="@{/projects/getProject/{id}(id=${project.getId()})}"
-                   th:text="Wyświetl"></a>
+                <dd class="card-text" th:text="'ID: ' + ${project.getId()}"></dd>
+                <dd class="card-text"
+                    th:text="'Description: ' + ${#strings.abbreviate(project.getDescription(), 20)}"></dd>
+                <dd class="card-text"
+                    th:text="'Date createad: ' + ${#dates.format(project.getDateCreated(), 'dd-MM-yyyy')}"></dd>
+                <a class="btn btn-outline-secondary btn-sm"
+                   th:href="@{/projects/getProject/{id}(id=${project.getId()})}"><i class="btn-sm fa-solid fa-eye"
+                                                                                    data-toggle="tooltip"
+                                                                                    data-placement="bottom"
+                                                                                    title="Wyświetl"></i> </a>
+                <a class="btn btn-outline-primary btn-sm" th:href="@{/projects/edit/{id}(id=${project.getId()})}"><i
+                        class="fa-solid fa-user-pen" data-toggle="tooltip" data-placement="bottom"
+                        title="Edytuj"></i></a>
+                <a class="btn btn-outline-danger btn-sm" th:href="@{/projects/delete/{id}(id=${project.getId()})}"><i
+                        class="fa-solid fa-trash" data-toggle="tooltip" data-placement="bottom" title="Usuń"></i></a>
             </div>
         </div>
     </section>
