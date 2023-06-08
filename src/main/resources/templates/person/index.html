@@ -33,8 +33,10 @@
                 <td th:text="${person.id}"></td>
                 <td th:text="${person.username}"></td>
                 <td th:text="${person.email}"></td>
-                <td><a th:href="@{/person/edit/{id}(id=${person.getId()})}" th:text="#{common.edit}"></a></td>
-                <td><a th:href="@{/person/delete/{id}(id=${person.getId()})}" th:text="#{common.remove}"></a></td>
+                <td><a th:href="@{/person/edit/{id}(id=${person.getId()})}"><i class="fa-solid fa-user-pen"></i></a>
+                </td>
+                <td><a th:href="@{/person/delete/{id}(id=${person.getId()})}"><i class="fa-sharp fa-solid fa-trash"></i></a>
+                </td>
             </tr>
         </table>
 

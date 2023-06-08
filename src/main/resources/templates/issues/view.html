@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" layout:decorate="~{main-layout/mainLayout}"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{issue.edit}"></title>
+</head>
+<body>
+<div class="container">
+
+    <section layout:fragment="custom-content">
+
+        <h1 th:text="#{issue.edit}"></h1>
+
+        <form th:action="@{/issues/edit/{id} (id=${issue.getId()})}" th:object="${issue}" method="post">
+
+
+            <div class="form-group mb-3">
+                <div class="input-group">
+                    <input type="text" th:class="form-control" th:field="*{name}" class="form-control"
+                           th:placeholder="#{issue.name}" disabled>
+                </div>
+            </div>
+
+
+            <div class="form-group mb-3">
+                <label for="textAreaControl"></label>
+                <textarea class="form-control" th:class="form-control" th:field="*{description}" id="textAreaControl"
+                          rows="10"
+                          th:placeholder="#{issue.description}" disabled></textarea>
+            </div>
+
+
+            <div class="form-control mb-3">
+                <label for="inputType" th:text="#{issue.type}"> </label>
+                <input type="text" class="form-control" th:class="form-control" th:field="*{type}" id="inputType"
+                       disabled>
+            </div>
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" for="inputPriority" th:text="#{issue.priority}"></label>
+                </div>
+                <select class="custom-select" th:field="*{priority}" id="inputPriority" disabled>
+                    <option th:each="prio : ${T(wsb.bugtracker.models.Priority).values()}"
+                            th:value="${prio}"
+                            th:text="${prio}">
+                    </option>
+                </select>
+            </div>
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" for="issue-creator" th:text="#{issue.executor}"></label>
+                </div>
+
+                <select class="form-control" th:class="form-control" th:field="*{assignee}" id="issue-creator" disabled>
+                    <option th:each="person : ${people}"
+                            th:value="${person.id}"
+                            th:text="${person.realName}">
+                    </option>
+                </select>
+            </div>
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" for="inputIssue" th:text="#{issue.status}"></label>
+                </div>
+                <select class="custom-select" th:field="*{status}" id="inputIssue" disabled>
+                    <option th:each="stat : ${T(wsb.bugtracker.models.Status).values()}"
+                            th:value="${stat}"
+                            th:text="${stat}">
+                    </option>
+                </select>
+            </div>
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" for="projectSelection" th:text="#{issue.choose.project}"></label>
+                </div>
+                <select class="form-control" th:field="*{project}" id="projectSelection" disabled>
+                    <option th:each="proj : ${projects}"
+                            th:value="${proj.getId()}"
+                            th:text="${proj.getName()}">
+                    </option>
+                </select>
+            </div>
+
+            <div class="col">
+                <a class="btn btn-primary mb-3" onclick="history.back()" th:text="#{common.cancel}"></a>
+            </div>
+        </form>
+    </section>
+</div>
+</body>
+</html>
