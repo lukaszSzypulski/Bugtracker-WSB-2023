@@ -10,9 +10,14 @@
 <body>
 <div class="container">
     <section layout:fragment="custom-content">
-        <h1 th:text="#{project.index}"></h1>
 
         <form th:action="@{/projects}" th:object="${filter}" class="row">
+
+            <div class="col">
+                <a class="btn btn-primary mb-3" type="submit" th:href="@{/projects/create}"
+                   th:text="#{project.new}"></a>
+            </div>
+
             <div class="col">
                 <input th:field="*{name}"
                        class="form-control"
