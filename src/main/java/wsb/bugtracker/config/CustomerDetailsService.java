@@ -1,4 +1,4 @@
-package wsb.bugtracker.services;
+package wsb.bugtracker.config;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;

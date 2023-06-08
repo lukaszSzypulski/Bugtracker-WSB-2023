@@ -59,10 +59,9 @@
                 <dd class="card-text"
                     th:text="'Date createad: ' + ${#dates.format(project.getDateCreated(), 'dd-MM-yyyy')}"></dd>
                 <a class="btn btn-outline-secondary btn-sm"
-                   th:href="@{/projects/getProject/{id}(id=${project.getId()})}"><i class="btn-sm fa-solid fa-eye"
-                                                                                    data-toggle="tooltip"
-                                                                                    data-placement="bottom"
-                                                                                    title="Wyświetl"></i> </a>
+                   th:href="@{/projects/getProject/{id}(id=${project.getId()})}">
+                    <i class="btn-sm fa-solid fa-eye" data-toggle="tooltip" data-placement="bottom"
+                       title="Wyświetl"></i> </a>
                 <a class="btn btn-outline-primary btn-sm" th:href="@{/projects/edit/{id}(id=${project.getId()})}"><i
                         class="fa-solid fa-user-pen" data-toggle="tooltip" data-placement="bottom"
                         title="Edytuj"></i></a>

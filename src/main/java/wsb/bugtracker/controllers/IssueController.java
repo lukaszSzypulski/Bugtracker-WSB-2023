@@ -131,8 +131,10 @@ public class IssueController {
 
         ModelAndView modelAndView = new ModelAndView("issues/view");
 
-        Issue issue = issueService.findById(id).get();
-        modelAndView.addObject("issue", issue);
+        if (issueService.findById(id).isPresent()) {
+            Issue issue = issueService.findById(id).get();
+            modelAndView.addObject("issue", issue);
+        }
         return modelAndView;
     }
 

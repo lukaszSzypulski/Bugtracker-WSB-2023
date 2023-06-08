@@ -15,8 +15,9 @@
         </ul>
 
         <div class="col-md-3 text-end">
-            <button type="button" class="btn btn-outline-primary me-2" th:text="#{navbar.myAccount}"></button>
-            <a href="/login" type="button" class="btn btn-primary" th:text="#{navbar.logout}"></a>
+            <a th:href="@{/person}" type="button" class="btn btn-outline-primary me-2"
+               th:text="#{navbar.myAccount}"></a>
+            <a href="/logout" type="button" class="btn btn-primary" th:text="#{navbar.logout}"></a>
         </div>
     </header>
 </div>
