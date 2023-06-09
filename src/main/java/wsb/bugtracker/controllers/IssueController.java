@@ -9,7 +9,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import wsb.bugtracker.filters.IssueFilter;
 import wsb.bugtracker.filters.ProjectFilter;
 import wsb.bugtracker.models.Issue;
 import wsb.bugtracker.models.Person;
@@ -32,13 +31,9 @@ public class IssueController {
     private final ProjectService projectService;
 
     @GetMapping
-    ModelAndView index(@ModelAttribute IssueFilter filter, Issue issue, Pageable pageable, Project project) {
+    ModelAndView index(@ModelAttribute ProjectFilter projectFilter, Pageable pageable) {
         ModelAndView modelAndView = new ModelAndView("issues/index");
-        modelAndView.addObject("issue", issue);
-        List<Person> person = personService.findAll();
-        modelAndView.addObject("person", person);
-        modelAndView.addObject("project", project);
-        modelAndView.addObject("filter", filter);
+        modelAndView.addObject("issue", issueService.findAll());
         return modelAndView;
     }
 
@@ -127,12 +122,19 @@ public class IssueController {
     }
 
     @GetMapping("/view/{id}")
-    ModelAndView view(@PathVariable Long id) {
+    ModelAndView view(@PathVariable Long id, ProjectFilter projectFilter, Pageable pageable) {
 
         ModelAndView modelAndView = new ModelAndView("issues/view");
 
-        Issue issue = issueService.findById(id).get();
-        modelAndView.addObject("issue", issue);
+        List<Person> people = personService.findAll();
+        modelAndView.addObject("people", people);
+
+        Page<Project> projects = projectService.findAll(projectFilter.buildSpecification(), pageable);
+        modelAndView.addObject("projects", projects);
+        if (issueService.findById(id).isPresent()) {
+            Issue issue = issueService.findById(id).get();
+            modelAndView.addObject("issue", issue);
+        }
         return modelAndView;
     }
 

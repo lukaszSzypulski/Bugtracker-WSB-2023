@@ -25,14 +25,18 @@
             <tr>
                 <th th:text="#{common.id}"></th>
                 <th th:text="#{common.name}"></th>
-                <th th:text="#{user.edit}"></th>
+                <th th:text="#{common.nameAndLast}"></th>
+                <th th:text="#{user.email}"></th>
+                <th th:text="#{common.view}"></th>
                 <th th:text="#{common.edit}"></th>
                 <th th:text="#{common.remove}"></th>
             </tr>
             <tr th:each="person: ${people}">
                 <td th:text="${person.id}"></td>
                 <td th:text="${person.username}"></td>
+                <td th:text="${person.realName}"></td>
                 <td th:text="${person.email}"></td>
+                <td><a th:href="@{/person/view/{id}(id=${person.getId()})}"><i class="fa-solid fa-eye"></i></a></td>
                 <td><a th:href="@{/person/edit/{id}(id=${person.getId()})}"><i class="fa-solid fa-user-pen"></i></a>
                 </td>
                 <td><a th:href="@{/person/delete/{id}(id=${person.getId()})}"><i class="fa-sharp fa-solid fa-trash"></i></a>

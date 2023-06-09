@@ -2,11 +2,13 @@ package wsb.bugtracker.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 import java.util.Set;
 
 @Entity
 @Data
+@RequiredArgsConstructor
 public class Person {
 
     @Id
@@ -30,4 +32,9 @@ public class Person {
             inverseJoinColumns = @JoinColumn(name = "authority_id"))
     private Set<Authority> authorities;
 
+    public Person(String adminUsername, String encode, String adminUsername1) {
+        this.username = adminUsername;
+        this.password = encode;
+        this.realName = adminUsername1;
+    }
 }

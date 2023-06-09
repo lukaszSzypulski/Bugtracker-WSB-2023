@@ -3,13 +3,12 @@ package wsb.bugtracker.config;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import wsb.bugtracker.services.CustomerDetailsService;
 
 @Configuration
 @EnableWebSecurity
@@ -17,6 +16,7 @@ import wsb.bugtracker.services.CustomerDetailsService;
 public class SecurityConfig {
 
     private final CustomerDetailsService customUserDetailsService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
     @Bean
@@ -30,32 +30,30 @@ public class SecurityConfig {
                         .loginPage("/login")
                         .permitAll()
                         .defaultSuccessUrl("/projects", true)
-                        .failureUrl("/login")
+                        .failureUrl("/loginError")
                 )
                 .logout((logout) -> logout
                         .permitAll()
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login")
                         .invalidateHttpSession(true)
-                        .deleteCookies("JSESSIONID")
-                        .clearAuthentication(true));
+                        .deleteCookies("JSESSIONID"));
 
         return httpSecurity.build();
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
 
-        provider.setPasswordEncoder(passwordEncoder());
-
+        provider.setPasswordEncoder(bCryptPasswordEncoder);
         provider.setUserDetailsService(customUserDetailsService);
 
         return provider;
+    }
+
+    @Bean
+    AuditorAware<String> auditorProvider() {
+        return new SpringSecurityAuditorAware();
     }
 }

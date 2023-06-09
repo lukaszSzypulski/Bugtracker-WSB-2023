@@ -94,11 +94,22 @@ public class PersonController {
             oldPerson.setAuthorities(newPerson.getAuthorities());
             oldPerson.setEmail(newPerson.getEmail());
             personService.save(oldPerson);
-        }
-        catch (NoSuchElementException e){
+        } catch (NoSuchElementException e) {
             e.printStackTrace();
         }
 
         return modelAndView;
     }
+
+    @GetMapping("/view/{id}")
+    ModelAndView view(@PathVariable Long id) {
+        ModelAndView modelAndView = new ModelAndView("person/view");
+        if (personService.findById(id).isPresent()) {
+            Person person = personService.findById(id).get();
+            modelAndView.addObject("person", person);
+        }
+
+        return modelAndView;
+    }
+
 }

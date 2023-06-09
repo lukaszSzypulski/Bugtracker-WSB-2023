@@ -8,48 +8,11 @@
 </head>
 <body>
 <div class="container">
+
     <section layout:fragment="custom-content">
-
-        <form th:action="@{/issues}" th:object="${filter}" class="row">
-
-            <div class="col">
-                <a class="btn btn-primary mb-3" type="submit" th:href="@{/issues/create}" th:text="#{issue.new}"></a>
-            </div>
-
-            <div class="col">
-                <input th:field="*{project}"
-                       class="form-control"
-                       th:placeholder="Projekt"/>
-            </div>
-
-            <div class="col">
-                <select th:field="*{status}"
-                        class="form-control">
-                    <option th:value="${null}">Status</option>
-                    <option th:each="isue :  ${issue}"
-                            th:value="${issue.getStatus()}"
-                            th:text="${issue.getStatus().name()}"
-                    ></option>
-                </select>
-            </div>
-
-            <div class="col">
-                <select th:field="*{assignee}"
-                        class="form-control">
-                    <option th:value="${null}">Wykonawca</option>
-                    <option th:each="ise :  ${issue}"
-                            th:value="${issue.getAssignee()}"
-                            th:text="${issue.getAssignee()}"
-                    ></option>
-                </select>
-            </div>
-
-            <div class="col">
-                <button type="submit" th:text="#{common.search}"
-                        class="btn btn-primary"></button>
-                <a th:href="@{/projects}" th:text="#{common.clear}"></a>
-            </div>
-        </form>
+        <div class="col">
+            <a class="btn btn-primary mb-3" type="submit" th:href="@{/issues/create}" th:text="#{issue.new}"></a>
+        </div>
 
 
         <table class="table">
@@ -59,9 +22,9 @@
                 <th th:text="#{issue.priority}"></th>
                 <th th:text="#{issue.type}"></th>
                 <th th:text="#{issue.title}"></th>
-                <!--                <th th:text="#{issue.project}"></th>-->
-                <!--                <th th:text="#{issue.assignee}"></th>-->
-                <th th:text="Wyświetl"></th>
+                <th th:text="#{issue.project}"></th>
+                <th th:text="#{issue.assignee}"></th>
+                <th th:text="#{common.view}"></th>
                 <th th:text="#{common.edit}"></th>
                 <th th:text="#{common.remove}"></th>
             </tr>
@@ -72,8 +35,8 @@
                 <td th:text="${iss.priority}"></td>
                 <td th:text="${iss.type}"></td>
                 <td th:text="${iss.name}"></td>
-                <!--                <td th:text="${iss.project.getName()}"></td>-->
-                <!--                <td th:text="${iss.assignee.getRealName()}"></td>-->
+                <td th:text="${iss.project.getName()}"></td>
+                <td th:text="${iss.assignee.getRealName()}"></td>
                 <td><a th:href="@{/issues/view/{id}(id=${iss.getId()})}"><i class="fa-solid fa-eye"></i></a></td>
                 <td><a th:href="@{/issues/edit/{id}(id=${iss.getId()})}"><i class="fa-solid fa-user-pen"></i></a></td>
                 <td><a th:href="@{/issues/delete/{id}(id=${iss.getId()})}"><i
@@ -81,6 +44,79 @@
             </tr>
         </table>
     </section>
+    <!--    <section layout:fragment="custom-content">-->
+
+    <!--        <form th:action="@{/issues}" th:object="${filter}" class="row">-->
+
+    <!--            <div class="col">-->
+    <!--                <a class="btn btn-primary mb-3" type="submit" th:href="@{/issues/create}" th:text="#{issue.new}"></a>-->
+    <!--            </div>-->
+
+    <!--            <div class="col">-->
+    <!--                <input th:field="*{project}"-->
+    <!--                       class="form-control"-->
+    <!--                       th:placeholder="Projekt"/>-->
+    <!--            </div>-->
+
+    <!--            <div class="col">-->
+    <!--                <select th:field="*{status}"-->
+    <!--                        class="form-control">-->
+    <!--                    <option th:value="${null}">Status</option>-->
+    <!--                    <option th:each="isue :  ${issue}"-->
+    <!--                            th:value="${issue.getStatus()}"-->
+    <!--                            th:text="${issue.getStatus().name()}"-->
+    <!--                    ></option>-->
+    <!--                </select>-->
+    <!--            </div>-->
+
+    <!--            <div class="col">-->
+    <!--                <select th:field="*{assignee}"-->
+    <!--                        class="form-control">-->
+    <!--                    <option th:value="${null}">Wykonawca</option>-->
+    <!--                    <option th:each="ise :  ${issue}"-->
+    <!--                            th:value="${issue.getAssignee()}"-->
+    <!--                            th:text="${issue.getAssignee()}"-->
+    <!--                    ></option>-->
+    <!--                </select>-->
+    <!--            </div>-->
+
+    <!--            <div class="col">-->
+    <!--                <button type="submit" th:text="#{common.search}"-->
+    <!--                        class="btn btn-primary"></button>-->
+    <!--                <a th:href="@{/projects}" th:text="#{common.clear}"></a>-->
+    <!--            </div>-->
+    <!--        </form>-->
+
+
+    <!--        <table class="table">-->
+    <!--            <tr>-->
+    <!--                <th th:text="#{common.id}"></th>-->
+    <!--                <th th:text="#{issue.status}"></th>-->
+    <!--                <th th:text="#{issue.priority}"></th>-->
+    <!--                <th th:text="#{issue.type}"></th>-->
+    <!--                <th th:text="#{issue.title}"></th>-->
+    <!--                &lt;!&ndash;                <th th:text="#{issue.project}"></th>&ndash;&gt;-->
+    <!--                &lt;!&ndash;                <th th:text="#{issue.assignee}"></th>&ndash;&gt;-->
+    <!--                <th th:text="#{common.view}"></th>-->
+    <!--                <th th:text="#{common.edit}"></th>-->
+    <!--                <th th:text="#{common.remove}"></th>-->
+    <!--            </tr>-->
+
+    <!--            <tr th:each="iss: ${issue}">-->
+    <!--                <td th:text="${iss.id}"></td>-->
+    <!--                <td th:text="${iss.status}"></td>-->
+    <!--                <td th:text="${iss.priority}"></td>-->
+    <!--                <td th:text="${iss.type}"></td>-->
+    <!--                <td th:text="${iss.name}"></td>-->
+    <!--                &lt;!&ndash;                <td th:text="${iss.project.getName()}"></td>&ndash;&gt;-->
+    <!--                &lt;!&ndash;                <td th:text="${iss.assignee.getRealName()}"></td>&ndash;&gt;-->
+    <!--                <td><a th:href="@{/issues/view/{id}(id=${iss.getId()})}"><i class="fa-solid fa-eye"></i></a></td>-->
+    <!--                <td><a th:href="@{/issues/edit/{id}(id=${iss.getId()})}"><i class="fa-solid fa-user-pen"></i></a></td>-->
+    <!--                <td><a th:href="@{/issues/delete/{id}(id=${iss.getId()})}"><i-->
+    <!--                        class="fa-sharp fa-solid fa-trash"></i></a></td>-->
+    <!--            </tr>-->
+    <!--        </table>-->
+    <!--    </section>-->
 </div>
 </body>
 </html>
