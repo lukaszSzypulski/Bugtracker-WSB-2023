@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import wsb.bugtracker.models.Issue;
+import wsb.bugtracker.models.Person;
 import wsb.bugtracker.models.Project;
 import wsb.bugtracker.models.Status;
 
@@ -13,21 +14,28 @@ import wsb.bugtracker.models.Status;
 @AllArgsConstructor
 public class IssueFilter {
 
-
-    private String name;
-    private Issue assignee;
-    private String globalSearch;
-    private Status status;
     private Project project;
+    private Person assignee;
+    private Status status;
 
 
-    public Specification<Project> buildSpecification() {
-        return Specification.anyOf(
-                ilike("type", globalSearch)
+    public Specification<Issue> buildSpecification() {
+        return Specification.allOf(
+                equalTo("assignee", assignee)
+//                ilike("name", name),
+//                equalTo("creator", creator)
         );
     }
 
-    private Specification<Project> equalTo(String property, Object value) {
+    private Specification<Issue> equalTo(String assignee, Object value) {
+        if (value == null) {
+            return Specification.where(null);
+        }
+
+        return (root, query, builder) -> builder.equal(root.get(assignee), value);
+    }
+
+    private Specification<Issue> contains(String property, Object value) {
         if (value == null) {
             return Specification.where(null);
         }
@@ -35,7 +43,7 @@ public class IssueFilter {
         return (root, query, builder) -> builder.equal(root.get(property), value);
     }
 
-    private Specification<Project> ilike(String property, String value) {
+    private Specification<Issue> ilike(String property, String value) {
         if (value == null) {
             return Specification.where(null);
         }
