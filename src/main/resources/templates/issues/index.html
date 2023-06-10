@@ -51,14 +51,23 @@
             </div>
 
             <div class="col">
+
                 <button type="submit" th:text="#{common.search}"
                         class="btn btn-primary"></button>
                 <a th:href="@{/issues}" th:text="#{common.clear}"></a>
+
+                <span th:with="sortingDir=${issues.sort.getOrderFor('name') != null ? issues.sort.getOrderFor('name').direction.toString() : null}">
+            <a th:href="@{'/issues?' + ${filter.toQueryString(issues.number, filter.findNextSorting(issues.sort))}}">
+                <i th:if="${sortingDir == null}" class="fa-solid fa-sort"></i>
+                <i th:if="${sortingDir == 'ASC'}" class="fa-solid fa-sort-up"></i>
+                <i th:if="${sortingDir == 'DESC'}" class="fa-solid fa-sort-down"></i>
+            </a>
+        </span>
             </div>
 
         </form>
 
-        <div class="card mt-4" th:each="iss : ${issues}">
+        <div class="card mt-4 mb-3" th:each="iss : ${issues}">
             <h5 class="card-header" th:text="${iss.id} + ' ' + ${iss.name}"></h5>
 
             <div class="card-body">
@@ -82,6 +91,34 @@
                         title="Edytuj"></i></a>
                 <a class="btn btn-outline-danger btn-sm" th:href="@{/issues/delete/{id}(id=${iss.getId()})}"><i
                         class="fa-solid fa-trash" data-toggle="tooltip" data-placement="bottom" title="Usuń"></i></a>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-2">
+                <ul class="pagination">
+
+                    <li th:if="${issues.number != 0}" class="page-item">
+                        <a th:href="@{'/issues?' + ${filter.toQueryString(issues.number - 1, issues.sort)}}"
+                           class="page-link">
+                            <i class="fa-solid fa-angle-left"></i>
+                        </a>
+                    </li>
+
+                    <li th:each="pageNumber : ${#numbers.sequence(T(java.lang.Math).max(issues.number - 2, 0), T(java.lang.Math).min(issues.number + 2, issues.totalPages - 1))}"
+                        th:class="${'page-item ' + ((pageNumber == issues.number) ? 'active' : '')}">
+                        <a th:href="@{'/issues?' + ${filter.toQueryString(pageNumber, issues.sort)}}"
+                           th:text="${pageNumber + 1}"
+                           class="page-link"></a>
+                    </li>
+
+                    <li th:if="${issues.number != (issues.totalPages - 1)}" class="page-item">
+                        <a th:href="@{'/issues?' + ${filter.toQueryString(issues.number + 1, issues.sort)}}"
+                           class="page-link">
+                            <i class="fa-solid fa-angle-right"></i>
+                        </a>
+                    </li>
+                </ul>
             </div>
         </div>
 
