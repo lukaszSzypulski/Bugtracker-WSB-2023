@@ -56,10 +56,10 @@
 
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
-                    <label class="input-group-text" for="issue-creator" th:text="#{issue.executor}"></label>
+                    <label class="input-group-text" for="issue-executor" th:text="#{issue.executor}"></label>
                 </div>
 
-                <select class="form-control" th:field="*{assignee}" id="issue-creator">
+                <select class="form-control" th:field="*{assignee}" id="issue-executor">
                     <option th:each="person : ${people}"
                             th:value="${person.id}"
                             th:text="${person.realName}">

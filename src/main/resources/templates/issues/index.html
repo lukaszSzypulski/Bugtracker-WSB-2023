@@ -43,9 +43,9 @@
                 <select th:field="*{assignee}"
                         class="form-control">
                     <option th:value="${null}" th:text="#{issue.executor}"></option>
-                    <option th:each="person :  ${people}"
-                            th:value="${person.getId()}"
-                            th:text="${person.getRealName()}"
+                    <option th:each="per :  ${people}"
+                            th:value="${per.getId()}"
+                            th:text="${per.getRealName()}"
                     ></option>
                 </select>
             </div>
