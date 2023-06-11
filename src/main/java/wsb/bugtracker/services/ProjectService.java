@@ -9,12 +9,17 @@ import wsb.bugtracker.models.Project;
 import wsb.bugtracker.repositories.ProjectRepository;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class ProjectService {
     final private ProjectRepository projectRepository;
+
+    public List<Project> findAll() {
+        return projectRepository.findAll();
+    }
 
     public Page<Project> findAll(Specification<Project> specification, Pageable pageable) {
         return projectRepository.findAll(specification, pageable);

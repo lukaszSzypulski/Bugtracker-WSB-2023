@@ -42,6 +42,28 @@
                        th:field="*{email}">
             </div>
 
+
+            <div class="form-group mb-3">
+                <label th:text="#{choose.authorities}"></label>
+
+                <div class="form-control">
+                    <div class="form-check-inline">
+                        <p th:each="auth : ${authoritiesList}">
+                            <input id="userAuthorities"
+                                   type="checkbox"
+                                   th:value="${auth.id}"
+                                   th:field="*{authorities}"/>
+
+                            <label
+                                    th:text="#{${'authority.'+ auth.name}}"
+                                    th:for="${auth.id}"
+                            ></label>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
             <div class="col">
                 <button type="submit" class="btn btn-primary mb-3" th:text="#{common.save}"></button>
                 <a class="btn btn-primary mb-3" onclick="history.back()" th:text="#{common.cancel}"></a>

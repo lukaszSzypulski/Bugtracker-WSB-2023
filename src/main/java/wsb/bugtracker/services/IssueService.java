@@ -1,6 +1,9 @@
 package wsb.bugtracker.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import wsb.bugtracker.models.Issue;
 import wsb.bugtracker.repositories.IssueRepository;
@@ -12,19 +15,25 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class IssueService {
 
-    final private IssueRepository issueRepository;
+    private final IssueRepository issueRepository;
 
     public List<Issue> findAll() {
         return issueRepository.findAll();
+    }
+
+    public Page<Issue> findAll(Specification<Issue> specification, Pageable pageable) {
+        return issueRepository.findAll(specification, pageable);
     }
 
     public void delete(Long id) {
         issueRepository.deleteById(id);
     }
 
-    public void save(Issue issue){
+    public void save(Issue issue) {
         issueRepository.save(issue);
-    };
+    }
 
-    public Optional<Issue> findById(Long id){return issueRepository.findById(id);}
+    public Optional<Issue> findById(Long id) {
+        return issueRepository.findById(id);
+    }
 }

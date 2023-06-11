@@ -13,11 +13,11 @@ public class LoginController {
         return new ModelAndView("general/login");
     }
 
-//    @GetMapping("/loginError")
-//    public ModelAndView loginError(Model model) {
-//        model.addAttribute("loginError", true);
-//        return modeAn
-//    }
+    @GetMapping("/loginError")
+    public ModelAndView loginError(Model model) {
+        model.addAttribute("loginError", true);
+        return new ModelAndView();
+    }
 
     @GetMapping("/logout")
     public ModelAndView logout(Model model) {

@@ -1,6 +1,7 @@
 package wsb.bugtracker.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
@@ -24,9 +25,10 @@ public class Person {
     @Column(nullable = false, unique = true)
     private String realName;
 
+    @Email
     private String email;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name = "person_authorities",
             joinColumns = @JoinColumn(name = "person_id"),
             inverseJoinColumns = @JoinColumn(name = "authority_id"))

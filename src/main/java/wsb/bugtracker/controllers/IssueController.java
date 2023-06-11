@@ -5,10 +5,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import wsb.bugtracker.filters.IssueFilter;
 import wsb.bugtracker.filters.ProjectFilter;
 import wsb.bugtracker.models.Issue;
 import wsb.bugtracker.models.Person;
@@ -31,24 +33,31 @@ public class IssueController {
     private final ProjectService projectService;
 
     @GetMapping
-    ModelAndView index(@ModelAttribute ProjectFilter projectFilter, Pageable pageable) {
+    ModelAndView index(@ModelAttribute IssueFilter filter, Pageable pageable) {
         ModelAndView modelAndView = new ModelAndView("issues/index");
-        modelAndView.addObject("issue", issueService.findAll());
+
+        Page<Issue> issues = issueService.findAll(filter.buildSpecification(), pageable);
+        modelAndView.addObject("issues", issues);
+        modelAndView.addObject("filter", filter);
+        List<Person> people = personService.findAll();
+        modelAndView.addObject("people", people);
+        List<Project> projects = projectService.findAll();
+        modelAndView.addObject("projects", projects);
         return modelAndView;
     }
 
+    @GetMapping("/create")
     ModelAndView create(@ModelAttribute ProjectFilter projectFilter, Pageable pageable) {
 
         Issue newIssue = new Issue();
         ModelAndView modelAndView = new ModelAndView("issues/create");
-        modelAndView.addObject("issue",newIssue);
+        modelAndView.addObject("issue", newIssue);
 
         List<Person> people = personService.findAll();
         modelAndView.addObject("people", people);
 
         Page<Project> projects = projectService.findAll(projectFilter.buildSpecification(), pageable);
         modelAndView.addObject("projects", projects);
-
 
         return modelAndView;
     }
@@ -77,9 +86,13 @@ public class IssueController {
         }
         issue.setDateCreated(new Date());
         issue.setLastUpdated(new Date());
-        issue.setCreator(issue.getAssignee()); ///TODO: logged person should be assignee as creator
-        issueService.save(issue);
+        String userLoggedName = (SecurityContextHolder.getContext().getAuthentication().getName());
 
+        if (personService.findByUsername(userLoggedName).isPresent()) {
+            issue.setCreator(personService.findByUsername(userLoggedName).get());
+        }
+
+        issueService.save(issue);
         return modelAndView;
 
     };
@@ -112,6 +125,7 @@ public class IssueController {
         try{
             Issue oldIssue = issueService.findById(newIssue.getId()).get();
 
+            oldIssue.setLastUpdated(new Date());
 
             issueService.save(oldIssue);
         } catch (NoSuchElementException e) {

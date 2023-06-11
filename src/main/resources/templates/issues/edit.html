@@ -16,15 +16,18 @@
         <form th:action="@{/issues/edit/{id} (id=${issue.getId()})}" th:object="${issue}" method="post">
 
 
-            <div class="form-group mb-3">
+            <div class="form-group">
                 <div class="input-group">
-                    <input type="text" th:class="form-control" th:field="*{name}" class="form-control" th:placeholder="#{issue.name}">
+                    <label class="input-group-text" id="inputId" th:text="${issue.getId()}"></label>
+                    <input type="text" th:class="form-control" th:field="*{name}" class="form-control"
+                           th:placeholder="#{issue.name}">
                 </div>
             </div>
 
 
             <div class="form-group mb-3">
                 <label for="textAreaControl"></label>
+                <label class="input-group-text" id="descriptionField" th:text="#{common.description}"></label>
                 <textarea class="form-control" th:class="form-control" th:field="*{description}" id="textAreaControl" rows="10"
                           th:placeholder="#{issue.description}"></textarea>
             </div>
@@ -59,9 +62,9 @@
                 </div>
 
                 <select class="form-control" th:class="form-control" th:field="*{assignee}" id="issue-creator">
-                    <option th:each="person : ${people}"
-                            th:value="${person.id}"
-                            th:text="${person.realName}">
+                    <option th:each="per : ${people}"
+                            th:value="${per.id}"
+                            th:text="${per.realName}">
                     </option>
                 </select>
             </div>
