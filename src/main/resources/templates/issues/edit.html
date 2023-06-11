@@ -62,9 +62,9 @@
                 </div>
 
                 <select class="form-control" th:class="form-control" th:field="*{assignee}" id="issue-creator">
-                    <option th:each="person : ${people}"
-                            th:value="${person.id}"
-                            th:text="${person.realName}">
+                    <option th:each="per : ${people}"
+                            th:value="${per.id}"
+                            th:text="${per.realName}">
                     </option>
                 </select>
             </div>

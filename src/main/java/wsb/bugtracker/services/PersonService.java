@@ -2,11 +2,12 @@ package wsb.bugtracker.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.annotation.CurrentSecurityContext;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import wsb.bugtracker.models.Authority;
 import wsb.bugtracker.models.Person;
-import wsb.bugtracker.models.Project;
 import wsb.bugtracker.repositories.PersonRepository;
 
 import java.util.HashSet;
@@ -58,7 +59,7 @@ public class PersonService {
 
         if (person.isPresent()) {
             System.out.println("Użytkownik administracyjny już istnieje, przerywamy");
-//            saveAllAuthorities(person.get());
+            saveAllAuthorities(person.get());
             return;
         }
 
@@ -85,7 +86,10 @@ public class PersonService {
         personRepository.save(person);
     }
 
-    public String getProjectCreatorData(Project project) {
-        return project.getCreator().getUsername();
+    public Object findLoggedUserId(@CurrentSecurityContext(expression = "authentication?.name") String loggedUserName) {
+        if (findByUsername(loggedUserName).isEmpty()) {
+            return new UsernameNotFoundException("Nie znaleziono uzytkownika");
+        }
+        return findByUsername(loggedUserName).get().getId();
     }
 }

@@ -18,7 +18,7 @@ import java.util.Set;
 
 @Service
 @AllArgsConstructor
-public class CustomerDetailsService implements UserDetailsService {
+public class CustomerUserDetailsService implements UserDetailsService {
 
     private final PersonRepository personRepository;
 

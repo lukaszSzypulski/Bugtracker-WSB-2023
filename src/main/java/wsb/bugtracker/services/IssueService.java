@@ -15,7 +15,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class IssueService {
 
-    final private IssueRepository issueRepository;
+    private final IssueRepository issueRepository;
 
     public List<Issue> findAll() {
         return issueRepository.findAll();
@@ -32,8 +32,6 @@ public class IssueService {
     public void save(Issue issue) {
         issueRepository.save(issue);
     }
-
-    ;
 
     public Optional<Issue> findById(Long id) {
         return issueRepository.findById(id);

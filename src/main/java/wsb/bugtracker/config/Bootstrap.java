@@ -1,67 +1,48 @@
 package wsb.bugtracker.config;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import wsb.bugtracker.models.Person;
+import wsb.bugtracker.models.Authority;
+import wsb.bugtracker.models.AuthorityName;
+import wsb.bugtracker.repositories.AuthorityRepository;
 import wsb.bugtracker.services.PersonService;
 
+import java.util.Optional;
+
 @Service
+@AllArgsConstructor
 public class Bootstrap implements InitializingBean {
 
     private final PersonService personService;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    //  private AuthorityService authorityService;
-//    private AuthorityRepository authorityRepository;
+    private final AuthorityRepository authorityRepository;
 
-
-    @Value("${secret.admin.username}")
-    private String adminUsername;
-
-    @Value("${secret.admin.password}")
-    private String adminPassword;
-
-    public Bootstrap(PersonService personService, BCryptPasswordEncoder bCryptPasswordEncoder) {
-        this.personService = personService;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-    }
 
     @Override
-    public void afterPropertiesSet() {
-        createDefaultUser();
+    public void afterPropertiesSet() throws Exception {
+        System.out.println("Start");
+
+        saveMissingAuthorities();
+        personService.saveAdmin();
     }
 
-    private void createDefaultUser() {
-        if (personService.findByUsername(adminUsername).isEmpty()) {
-            personService.save(new Person(adminUsername, bCryptPasswordEncoder.encode(adminPassword), adminUsername));
+    void saveMissingAuthorities() {
+        for (AuthorityName authorityName : AuthorityName.values()) {
+            Optional<Authority> authority = authorityRepository.findByName(authorityName);
+
+            if (authority.isPresent()) {
+                continue;
+            }
+
+            Authority newAuthority = new Authority();
+            newAuthority.setName(authorityName);
+
+            System.out.println("Zapisujemy nowe uprawnienie: " + authorityName.name());
+
+            authorityRepository.save(newAuthority);
         }
-    }
-}
 
-//    @Override
-//    public void afterPropertiesSet() throws Exception {
-//        System.out.println("Start");
-//
-//        saveMissingAuthorities();
-//        personService.saveAdmin();
-//    }
-//
-//    void saveMissingAuthorities() {
-//        for (AuthorityName authorityName : AuthorityName.values()) {
-//            Optional<Authority> authority = authorityRepository.findByName(authorityName);
-//
-//            if (authority.isPresent()) {
-//                continue;
-//            }
-//
-//            Authority newAuthority = new Authority();
-//            newAuthority.setName(authorityName);
-//
-//            authorityRepository.save(newAuthority);
-//        }
-//
-//    }
-//
-//
-//}
+    }
+
+
+}

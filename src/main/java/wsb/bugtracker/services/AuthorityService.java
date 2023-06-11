@@ -13,7 +13,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AuthorityService {
 
-    private AuthorityRepository authorityRepository;
+    private final AuthorityRepository authorityRepository;
 
     public Optional<Authority> findByName(AuthorityName name) {
         return authorityRepository.findByName(name);
