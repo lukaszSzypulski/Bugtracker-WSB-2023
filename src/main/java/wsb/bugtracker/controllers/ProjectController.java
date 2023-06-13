@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -38,6 +39,7 @@ public class ProjectController {
         return modelAndView;
     }
 
+    @Secured("ROLE_CREATE_PROJECT")
     @GetMapping("/create")
     ModelAndView create() {
         ModelAndView modelAndView = new ModelAndView("projects/create");
@@ -53,6 +55,7 @@ public class ProjectController {
         return modelAndView;
     }
 
+    @Secured("ROLE_CREATE_PROJECT")
     @PostMapping("/save")
     ModelAndView save(@ModelAttribute @Valid Project project,
                       BindingResult bindingResult) {

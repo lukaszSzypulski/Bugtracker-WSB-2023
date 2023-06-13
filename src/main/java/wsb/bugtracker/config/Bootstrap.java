@@ -20,8 +20,6 @@ public class Bootstrap implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        System.out.println("Start");
-
         saveMissingAuthorities();
         personService.saveAdmin();
     }
@@ -37,12 +35,9 @@ public class Bootstrap implements InitializingBean {
             Authority newAuthority = new Authority();
             newAuthority.setName(authorityName);
 
-            System.out.println("Zapisujemy nowe uprawnienie: " + authorityName.name());
-
             authorityRepository.save(newAuthority);
         }
 
     }
-
 
 }

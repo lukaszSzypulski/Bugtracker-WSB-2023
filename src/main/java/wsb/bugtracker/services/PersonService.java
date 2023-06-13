@@ -53,7 +53,8 @@ public class PersonService {
         String username = adminUsername;
         String password = adminPass;
 
-        System.out.println("nazwa użytkownika administratora: " + adminUsername);
+        System.out.println("Admin Login: " + adminUsername);
+        System.out.println("Admin Password:" + adminPass);
 
         Optional<Person> person = personRepository.findByUsername(username);
 

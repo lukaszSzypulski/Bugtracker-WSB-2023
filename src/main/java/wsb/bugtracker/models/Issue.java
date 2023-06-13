@@ -50,6 +50,8 @@ public class Issue {
     @Column(nullable = false)
     private Date lastUpdated;
 
-   @OneToMany
-   private List<Comment> comments;
+    @OneToMany
+    private List<Comment> comments;
+
+    private String attachment;
 }

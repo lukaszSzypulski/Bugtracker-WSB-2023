@@ -27,7 +27,7 @@ public class PersonController {
     final private AuthorityService authorityService;
     final private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @Secured("ROLE_USERS_TAB")
+    @Secured("ROLE_LIST_USER")
     @GetMapping()
     ModelAndView index() {
         ModelAndView modelAndView = new ModelAndView("person/index");
@@ -123,7 +123,7 @@ public class PersonController {
         return modelAndView;
     }
 
-    @Secured("ROLE_USERS_TAB")
+    @Secured("ROLE_LIST_USER")
     @GetMapping("/view/{id}")
     ModelAndView view(@PathVariable Long id) {
         ModelAndView modelAndView = new ModelAndView("person/view");
