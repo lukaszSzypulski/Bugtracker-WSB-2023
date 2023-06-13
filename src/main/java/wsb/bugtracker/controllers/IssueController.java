@@ -1,7 +1,11 @@
 package wsb.bugtracker.controllers;
 
+import jakarta.persistence.EntityManager;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.envers.AuditReader;
+import org.hibernate.envers.AuditReaderFactory;
+import org.hibernate.envers.query.AuditEntity;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -14,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import wsb.bugtracker.audit.AuditDataDTO;
 import wsb.bugtracker.filters.IssueFilter;
 import wsb.bugtracker.filters.ProjectFilter;
 import wsb.bugtracker.models.Issue;
@@ -42,6 +47,7 @@ public class IssueController {
     private final IssueService issueService;
     private final PersonService personService;
     private final ProjectService projectService;
+    private final EntityManager entityManager;
 
     @GetMapping
     ModelAndView index(@ModelAttribute IssueFilter filter, Pageable pageable) {
@@ -141,6 +147,7 @@ public class IssueController {
 
         ModelAndView modelAndView = new ModelAndView("redirect:/issues");
 
+        //TODO: issue do not save new comment
         try {
             Issue oldIssue = issueService.findById(newIssue.getId()).get();
 
@@ -168,6 +175,16 @@ public class IssueController {
             Issue issue = issueService.findById(id).get();
             modelAndView.addObject("issue", issue);
         }
+
+        AuditReader auditReader = AuditReaderFactory.get(entityManager);
+
+        List<Object[]> rawRevisions = auditReader.createQuery()
+                .forRevisionsOfEntity(Issue.class, false, true)
+                .add(AuditEntity.id().eq(id))
+                .getResultList();
+
+        List<AuditDataDTO> revisions = rawRevisions.stream().map(AuditDataDTO::new).toList();
+        modelAndView.addObject("revisions", revisions);
         return modelAndView;
     }
 
