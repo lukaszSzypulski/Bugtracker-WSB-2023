@@ -33,7 +33,7 @@ public class SecurityConfig {
                         .loginPage("/login")
                         .permitAll()
                         .defaultSuccessUrl("/projects", true)
-                        .failureUrl("/loginError")
+                        .failureUrl("/login?Error")
                 )
                 .logout((logout) -> logout
                         .logoutUrl("/logout")

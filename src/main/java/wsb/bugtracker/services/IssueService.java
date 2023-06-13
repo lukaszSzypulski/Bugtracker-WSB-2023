@@ -36,4 +36,8 @@ public class IssueService {
     public Optional<Issue> findById(Long id) {
         return issueRepository.findById(id);
     }
+
+    public void findByIdAndSetAttachment(Long id) {
+        issueRepository.findByIdAndSetAttachment(id);
+    }
 }
