@@ -2,14 +2,18 @@ package wsb.bugtracker.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import wsb.bugtracker.annotation.ValidPasswords;
 
 import java.util.Set;
 
 @Entity
 @Data
 @RequiredArgsConstructor
+@ValidPasswords
 public class Person {
 
     @Id
@@ -20,7 +24,12 @@ public class Person {
     private String username;
 
     @Column(nullable = false)
+    @NotNull
+    @NotEmpty(message = "{password.notEmpty}")
     private String password;
+
+    @Transient
+    String repeatedPassword;
 
     @Column(nullable = false, unique = true)
     private String realName;

@@ -2,6 +2,7 @@ package wsb.bugtracker.controllers;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
@@ -144,18 +145,20 @@ public class ProjectController {
     }
 
     @GetMapping("/delete/{id}")
-    ModelAndView delete(@PathVariable Long id) {
+    ModelAndView delete(@PathVariable Long id, @ModelAttribute ProjectFilter filter, Pageable pageable) {
 
-        ModelAndView modelAndView = new ModelAndView("projects/view");
-
-        if (projectService.findById(id).isPresent()) {
-            Project project = projectService.findById(id).get();
-            if (!issueService.isProjectAssigned(id)) {
-                projectService.delete(project.getId());
-            }
-
+        ModelAndView modelAndView = new ModelAndView("projects/index");
+        try {
+            projectService.delete(id);
+        } catch (DataIntegrityViolationException e) {
+            modelAndView.addObject("message", "Nie udało się usunąć projektu ponieważ jest używany w innych miejsach systemu");
         }
 
+        Page<Project> projects = projectService.findAll(filter.buildSpecification(), pageable);
+        modelAndView.addObject("projects", projects);
+        List<Person> people = personService.findAll();
+        modelAndView.addObject("people", people);
+        modelAndView.addObject("filter", filter);
 
         return modelAndView;
     }

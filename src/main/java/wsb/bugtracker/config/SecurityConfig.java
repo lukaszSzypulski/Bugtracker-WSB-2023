@@ -41,7 +41,11 @@ public class SecurityConfig {
                         .logoutUrl("/logout")
                         .permitAll()
                         .invalidateHttpSession(true)
-                        .deleteCookies("JSESSIONID"));
+                        .deleteCookies("JSESSIONID"))
+                .exceptionHandling((exceptionHandling) ->
+                        exceptionHandling
+                                .accessDeniedPage("/errors/access-denied")
+                );
 
         return httpSecurity.build();
     }

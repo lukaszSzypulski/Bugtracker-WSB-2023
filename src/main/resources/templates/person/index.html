@@ -4,7 +4,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
     <meta charset="UTF-8">
-    <title th:text="#{user.new}">Użytkownicy</title>
+    <title th:text="#{user.header}"></title>
 
 </head>
 <body>
@@ -36,10 +36,12 @@
                 <td th:text="${person.username}"></td>
                 <td th:text="${person.realName}"></td>
                 <td th:text="${person.email}"></td>
-                <td><a th:href="@{/person/view/{id}(id=${person.getId()})}"><i class="fa-solid fa-eye"></i></a></td>
-                <td><a th:href="@{/person/edit/{id}(id=${person.getId()})}"><i class="fa-solid fa-user-pen"></i></a>
-                </td>
-                <td><a th:href="@{/person/delete/{id}(id=${person.getId()})}"><i class="fa-sharp fa-solid fa-trash"></i></a>
+                <td><a th:href="@{/person/view/{id}(id=${person.getId()})}"><i
+                        class="fa-solid fa-eye text-secondary"></i></a></td>
+                <td><a th:href="@{/person/edit/{id}(id=${person.getId()})}"><i
+                        class="fa-solid fa-user-pen text-primary"></i></a></td>
+                <td><a th:href="@{/person/delete/{id}(id=${person.getId()})}"><i
+                        class="fa-sharp fa-solid fa-trash text-danger"></i></a>
                 </td>
             </tr>
         </table>

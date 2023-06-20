@@ -4,21 +4,21 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
     <meta charset="UTF-8">
-    <title>Widok uzytkownika"</title>
+    <title th:text="#{user.view}"></title>
 </head>
 <body>
 <div class="container">
 
     <section layout:fragment="custom-content">
 
-        <h1>Widok uzytkownika</h1>
+        <h1 th:text="#{user.view}"></h1>
 
 
         <form th:action="@{/person/view/{id}(id=${person.getId()})}" th:object="${person}" method="get">
 
             <div class="form-group mb-3">
                 <label for="userName" th:text="#{user.name}"></label>
-                <input type="text" class="form-control-plaintext" id="userName" disabled
+                <input type="text" class="form-control-plaintext" id="userName" readonly
                        th:class="form-control"
                        th:field="*{username}">
             </div>
@@ -27,12 +27,12 @@
             <div class="form-group mb-3">
                 <label for="realName" th:text="#{common.nameAndLast}"></label>
                 <input type="text" class="form-control" id="realName"
-                       th:field="*{realName}" disabled>
+                       th:field="*{realName}" readonly>
             </div>
 
             <div class="form-group mb-3">
                 <label for="userEmail" th:text="#{user.email}"></label>
-                <input type="email" class="form-control" id="userEmail" aria-describedby="email" disabled
+                <input type="email" class="form-control" id="userEmail" aria-describedby="email" readonly
                        th:class="form-control"
                        th:field="*{email}">
             </div>
@@ -43,10 +43,10 @@
                 <div class="form-control">
                     <div class="form-check-inline">
                         <p th:each="auth : ${authoritiesList}">
-                            <input id="userAuthorities" disabled
+                            <input id="userAuthorities"
                                    type="checkbox"
                                    th:value="${auth.id}"
-                                   th:field="*{authorities}"/>
+                                   th:field="*{authorities}" disabled/>
 
                             <label
                                     th:text="#{${'authority.'+ auth.name}}"
@@ -58,7 +58,7 @@
             </div>
 
             <div class="col">
-                <a class="btn btn-primary mb-3" onclick="history.back()" th:text="#{common.cancel}"></a>
+                <a th:href="@{/person}" class="btn btn-primary mb-3" th:text="#{common.cancel}"></a>
             </div>
 
         </form>

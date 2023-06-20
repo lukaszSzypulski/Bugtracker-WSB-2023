@@ -16,7 +16,6 @@ import wsb.bugtracker.services.AuthorityService;
 import wsb.bugtracker.services.PersonService;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Controller
 @RequestMapping("/person")
@@ -42,7 +41,7 @@ public class PersonController {
         try {
             personService.delete(id);
         } catch (DataIntegrityViolationException e) {
-            modelAndView.addObject("message", "nie udało się usunąć użytkownika ponieważ jest używany w innych miejscach systemu");
+            modelAndView.addObject("message", "Nie udało się usunąć użytkownika ponieważ jest używany w innych miejscach systemu");
         }
         modelAndView.addObject("people", personService.findAll());
         return modelAndView;
@@ -64,7 +63,7 @@ public class PersonController {
 
     @Secured("ROLE_CREATE_USER")
     @PostMapping("/save")
-    ModelAndView save(@ModelAttribute @Valid Person person,
+    ModelAndView save(@Valid @ModelAttribute Person person,
                       BindingResult bindingResult) {
 
         ModelAndView modelAndView = new ModelAndView("redirect:/person");
@@ -82,7 +81,7 @@ public class PersonController {
     }
 
     @GetMapping("/edit/{id}")
-    ModelAndView editPerson(@PathVariable("id") @ModelAttribute Long id) {
+    ModelAndView editPerson(@PathVariable Long id) {
 
         ModelAndView modelAndView = new ModelAndView("person/edit");
 
@@ -94,7 +93,6 @@ public class PersonController {
         if (personService.findById(id).isPresent()) {
             Person person = personService.findById(id).get();
             modelAndView.addObject("person", person);
-
         }
 
         return modelAndView;
@@ -102,11 +100,20 @@ public class PersonController {
 
 
     @PostMapping("/edit/{id}")
-    ModelAndView saveEditedPerson(@PathVariable Long id, @ModelAttribute @Valid Person newPerson) {
+    ModelAndView saveEditedPerson(@PathVariable Long id, @ModelAttribute @Valid Person newPerson, BindingResult bindingResult) {
 
         ModelAndView modelAndView = new ModelAndView("redirect:/person");
 
-        try {
+        List<Authority> authoritiesList = authorityService.findAll();
+
+        modelAndView.addObject("authoritiesList", authoritiesList);
+
+        if (bindingResult.hasErrors()) {
+            modelAndView.setViewName("person/edit");
+            return modelAndView;
+        }
+
+        if (personService.findById(newPerson.getId()).isPresent()) {
             Person oldPerson = personService.findById(newPerson.getId()).get();
             oldPerson.setRealName(newPerson.getRealName());
 
@@ -115,11 +122,7 @@ public class PersonController {
             oldPerson.setAuthorities(newPerson.getAuthorities());
             oldPerson.setEmail(newPerson.getEmail());
             personService.save(oldPerson);
-
-        } catch (NoSuchElementException e) {
-            e.printStackTrace();
         }
-
         return modelAndView;
     }
 

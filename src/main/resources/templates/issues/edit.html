@@ -36,10 +36,10 @@
                 <div class="input-group-prepend">
                     <label class="input-group-text" for="inputType" th:text="#{issue.type}"></label>
                 </div>
-                <select class="custom-select" th:field="*{type}" id="inputType">
+                <select class="form-control" th:field="*{type}" id="inputType">
                     <option th:each="typ : ${T(wsb.bugtracker.models.Type).values()}"
                             th:value="${typ}"
-                            th:text="${typ}">
+                            th:text="#{'type.' + ${typ}}">
                     </option>
                 </select>
             </div>
@@ -48,10 +48,22 @@
                 <div class="input-group-prepend">
                     <label class="input-group-text" for="inputPriority" th:text="#{issue.priority}"></label>
                 </div>
-                <select class="custom-select" th:field="*{priority}" id="inputPriority">
+                <select class="form-control" th:field="*{priority}" id="inputPriority">
                     <option th:each="prio : ${T(wsb.bugtracker.models.Priority).values()}"
                             th:value="${prio}"
-                            th:text="${prio}">
+                            th:text="#{'priority.'+ ${prio}}">
+                    </option>
+                </select>
+            </div>
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" for="inputIssue" th:text="#{issue.status}"></label>
+                </div>
+                <select class="form-control" th:field="*{status}" id="inputIssue">
+                    <option th:each="stat : ${T(wsb.bugtracker.models.Status).values()}"
+                            th:value="${stat}"
+                            th:text="#{'status.' + ${stat}}">
                     </option>
                 </select>
             </div>
@@ -65,18 +77,6 @@
                     <option th:each="per : ${people}"
                             th:value="${per.id}"
                             th:text="${per.realName}">
-                    </option>
-                </select>
-            </div>
-
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <label class="input-group-text" for="inputIssue" th:text="#{issue.status}"></label>
-                </div>
-                <select class="custom-select" th:field="*{status}" id="inputIssue">
-                    <option th:each="stat : ${T(wsb.bugtracker.models.Status).values()}"
-                            th:value="${stat}"
-                            th:text="${stat}">
                     </option>
                 </select>
             </div>
@@ -101,7 +101,7 @@
 
             <div class="col">
                 <button type="submit" class="btn btn-primary mb-3" th:text="#{common.save}"></button>
-                <a class="btn btn-primary mb-3" onclick="history.back()" th:text="#{common.cancel}"></a>
+                <a th:href="@{/issues}" class="btn btn-primary mb-3" th:text="#{common.cancel}"></a>
             </div>
 
         </form>
