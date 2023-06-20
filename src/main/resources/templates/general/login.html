@@ -10,17 +10,14 @@
 
 <section layout:fragment="custom-content">
 
-    <h1 th:text="Logowanie"></h1>
+    <h1 th:text="#{login.header}"></h1>
 
-    <div th:if="${param.error}" class="alert alert-danger">
-        <span>Błędny login lub hasło!</span>
+    <div th:if="${param.error != null}" class="alert alert-danger">
+        <span th:text="#{login.error}"></span>
     </div>
-
     <form th:action="@{/login}" method="post">
         <div class="mb-3">
-            <label for="username">
-                Nazwa użytkownika
-            </label>
+            <label for="username" th:text="#{login.name}"></label>
 
             <input type="text"
                    class="form-control"
@@ -29,9 +26,7 @@
         </div>
 
         <div class="mb-3">
-            <label for="password">
-                Hasło
-            </label>
+            <label for="password" th:text="#{login.password}"></label>
 
             <input type="password"
                    class="form-control"
@@ -39,8 +34,7 @@
                    name="password">
         </div>
 
-        <button type="submit" class="btn btn-primary">
-            Zaloguj
+        <button type="submit" class="btn btn-primary" th:text="#{login.button}">
         </button>
     </form>
 </section>

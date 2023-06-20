@@ -19,33 +19,40 @@
 
             <div class="form-group mb-3">
                 <label for="project-id">Id</label>
-                <input type="text" class="form-control-plaintext" id="project-id" th:field="*{id}"
-                       th:class="form-control" disabled>
+                <input type="text" class="form-control-plaintext text-muted" id="project-id" th:field="*{id}"
+                       th:class="form-control" readonly>
             </div>
 
             <div class="form-group mb-3">
                 <label for="project-name" th:text="#{common.name}"></label>
-                <input type="text" class="form-control" th:class="form-control" th:field="*{name}" id="project-name"
-                       disabled/>
+                <input type="text" class="form-control text-muted" th:class="form-control" th:field="*{name}"
+                       id="project-name"
+                       readonly/>
             </div>
 
             <div class="form-group mb-3">
                 <label for="project-creator" th:text="#{project.creator}"></label>
-                <input type="text" class="form-control-plaintext" id="project-creator" th:class="form-control"
-                       th:field="*{creator.realName}" disabled>
+                <input type="text" class="form-control-plaintext text-muted" id="project-creator"
+                       th:class="form-control"
+                       th:field="*{creator.realName}" readonly>
             </div>
 
 
             <div class="form-group mb-3">
                 <label for="project-description" th:text="#{common.description}"></label>
 
-                <textarea class="form-control" th:class="form-control" th:field="*{description}"
+                <textarea class="form-control text-muted" th:class="form-control" th:field="*{description}"
                           id="project-description" rows="10"
-                          th:placeholder="#{common.description}" disabled></textarea>
+                          th:placeholder="#{common.description}" readonly></textarea>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="date-created" th:text="#{issue.dateCreated}"></label>
+                <input type="text" class="form-control text-muted" id="date-created" th:field="*{dateCreated}" readonly>
             </div>
 
             <div class="col mb-3">
-                <a class="btn btn-primary mb-3" onclick="history.back()" th:text="#{common.cancel}"></a>
+                <a th:href="@{/projects}" class="btn btn-primary mb-3" th:text="#{common.cancel}"></a>
             </div>
         </form>
     </section>
