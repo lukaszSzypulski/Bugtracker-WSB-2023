@@ -15,7 +15,7 @@
         </ul>
 
         <div class="col-md-3 text-end">
-            <a th:href="@{/person/view/{id}(id=${@personService.findLoggedUserId(#authentication.name)})}" type="button"
+            <a th:href="@{/person/edit/{id}(id=${@personService.findLoggedUserId(#authentication.name)})}" type="button"
                class="btn btn-outline-primary me-2"
                th:text="#{navbar.myAccount}"></a>
             <a href="/logout" type="button" class="btn btn-primary" th:text="#{navbar.logout}"></a>

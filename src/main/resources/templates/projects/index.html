@@ -11,6 +11,12 @@
 <div class="container">
     <section layout:fragment="custom-content">
 
+        <div class="alert alert-danger"
+             role="alert"
+             th:text="${message}"
+             th:if="${message}">
+        </div>
+
         <form th:action="@{/projects}" th:object="${filter}" class="row">
 
             <div class="col">

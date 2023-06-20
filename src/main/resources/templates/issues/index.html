@@ -33,7 +33,7 @@
                     <option th:value="${null}" th:text="#{issue.status}"></option>
                     <option th:each="typ : ${T(wsb.bugtracker.models.Type).values()}"
                             th:value="${typ}"
-                            th:text="${typ}">
+                            th:text="#{'type.' + ${typ}}">
                     </option>
                 </select>
             </div>
@@ -70,16 +70,17 @@
             <h5 class="card-header" th:text="${iss.id} + ' ' + ${iss.name}"></h5>
 
             <div class="card-body">
-                <dd class="card-text" th:text="'Wykonawca: ' + ${iss.assignee.realName}">
+                <dd class="card-text" th:text="#{issue.executor} + ': ' + ${iss.assignee.realName}">
                 </dd>
                 <dd class="card-text"
-                    th:text="${#strings.abbreviate(iss.getDescription(), 20)}"></dd>
-                <dd class="card-text"
-                    th:text="${iss.status}"></dd>
-                <dd class="card-text"
-                    th:text="${iss.priority}"></dd>
-                <dd class="card-text"
-                    th:text="${iss.type}"></dd>
+                    th:text="#{issue.description} + ': ' + ${#strings.abbreviate(iss.getDescription(), 20)}"></dd>
+                <dd class="card-text">
+                    <div class="d-flex justify-content-end">
+                        <div class="p-2 alert alert-success small" th:text="#{'type.' + ${iss.type}}"></div>
+                        <div class="p-2 alert alert-primary small" th:text="#{'priority.' + ${iss.priority}}"></div>
+                        <div class="p-2 alert alert-info small" th:text="#{'issue.' +  ${iss.status}}"></div>
+                    </div>
+                </dd>
 
                 <a class="btn btn-outline-secondary btn-sm"
                    th:href="@{/issues/view/{id}(id=${iss.getId()})}">
