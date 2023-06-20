@@ -36,8 +36,7 @@
                        th:placeholder="#{project.name.long}"
                        th:field="*{name}">
 
-                <!-- Wyświetlamy wszystkie błędy w polu name -->
-                <small th:errors="*{name}"
+                <small th:errors="*{name}" class="text-danger"
                        th:if="${#fields.hasErrors('name')}"></small>
             </div>
 
@@ -51,7 +50,7 @@
 
             <div class="col mb-3">
                 <button type="submit" class="btn btn-primary mb-3" th:text="#{common.save}"></button>
-                <a class="btn btn-primary mb-3" onclick="history.back()" th:text="#{common.cancel}"></a>
+                <a th:href="@{/projects}" class="btn btn-primary mb-3" th:text="#{common.cancel}"></a>
             </div>
         </form>
     </section>

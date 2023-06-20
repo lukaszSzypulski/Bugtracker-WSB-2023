@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -18,7 +19,7 @@ public class Project {
 
     @Column(nullable = false, unique = true)
     @NotNull
-    @NotEmpty
+    @NotEmpty(message = "{project.name.notEmpty}")
     @Size(min = 3, max = 10)
     private String name;
 
@@ -26,6 +27,7 @@ public class Project {
     private Boolean enabled = true;
 
     @Column(nullable = false)
+    @DateTimeFormat(pattern = "dd-MM-yyyy")
     private Date dateCreated;
 
     @Column(columnDefinition = "TEXT")

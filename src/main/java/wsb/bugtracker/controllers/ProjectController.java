@@ -13,12 +13,12 @@ import wsb.bugtracker.filters.ProjectFilter;
 import wsb.bugtracker.models.Mail;
 import wsb.bugtracker.models.Person;
 import wsb.bugtracker.models.Project;
+import wsb.bugtracker.services.IssueService;
 import wsb.bugtracker.services.MailService;
 import wsb.bugtracker.services.PersonService;
 import wsb.bugtracker.services.ProjectService;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Controller
 @RequestMapping("/projects")
@@ -27,6 +27,7 @@ public class ProjectController {
     final private ProjectService projectService;
     final private PersonService personService;
     final private MailService mailService;
+    final private IssueService issueService;
 
     @GetMapping
     ModelAndView index(@ModelAttribute ProjectFilter filter, Pageable pageable) {
@@ -49,33 +50,33 @@ public class ProjectController {
 
         modelAndView.addObject("project", newProject);
 
-        List<Person> people = personService.findAll();
-        modelAndView.addObject("people", people);
+        modelAndView.addObject("people", personService.findAll());
 
         return modelAndView;
     }
 
     @Secured("ROLE_CREATE_PROJECT")
     @PostMapping("/save")
-    ModelAndView save(@ModelAttribute @Valid Project project,
-                      BindingResult bindingResult) {
+    ModelAndView save(@ModelAttribute @Valid Project project, BindingResult bindingResult) {
 
         ModelAndView modelAndView = new ModelAndView("redirect:/projects");
 
-        if (bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors() || projectService.isProjectNameUnique(project)) {
             modelAndView.setViewName("projects/create");
             modelAndView.addObject("project", project);
             modelAndView.addObject("people", personService.findAll());
+            if (projectService.isProjectNameUnique(project)) {
+                bindingResult.rejectValue("name", "project.name.unique");
+            }
             return modelAndView;
         }
 
-        Long aLong = projectService.saveAndReturnId(project);
-
         if (personService.findById(project.getCreator().getId()).isPresent()) {
-            String projectUrl = "http://localhost:8080/projects/getProject/" + aLong;
+            Long projectId = projectService.saveAndReturnId(project);
+            String projectUrl = "http://localhost:8080/projects/getProject/" + projectId;
 
             String emailAddress = personService.findById(project.getCreator().getId()).get().getEmail();
-            String emailSubject = "Dodano nowe zgloszenie numer: " + aLong;
+            String emailSubject = "Dodano nowe zgloszenie numer: " + projectId;
             String emailContent = "Zajmij sie nim niezwlocznie: " + "<a href='" + projectUrl + "'>" + "Link</a>";
 
 
@@ -86,17 +87,9 @@ public class ProjectController {
             mailService.sendMail(mail);
 
         }
-
-
         return modelAndView;
     }
 
-    @GetMapping("/delete/{id}")
-    ModelAndView delete(@PathVariable Long id) {
-        System.out.println("usuwanie projektu " + id);
-        projectService.delete(id);
-        return new ModelAndView("redirect:/projects");
-    }
 
     @GetMapping("/edit/{id}")
     ModelAndView editProject(@PathVariable("id") Long id) {
@@ -113,14 +106,25 @@ public class ProjectController {
 
 
     @PostMapping("/edit/{id}")
-    ModelAndView saveEditedProject(@PathVariable Long id, @ModelAttribute Project newProject) {
+    ModelAndView saveEditedProject(@ModelAttribute @Valid Project newProject, BindingResult bindingResult) {
 
-        try {
+        ModelAndView modelAndView = new ModelAndView("redirect:/projects");
+
+
+        if (bindingResult.hasErrors() || projectService.isProjectNameUnique(newProject)) {
+            modelAndView.setViewName("projects/edit");
+            modelAndView.addObject("project", newProject);
+            if (projectService.isProjectNameUnique(newProject)) {
+                bindingResult.rejectValue("name", "project.name.unique");
+            }
+            return modelAndView;
+        }
+
+        if (projectService.findById(newProject.getId()).isPresent()) {
             Project oldProject = projectService.findById(newProject.getId()).get();
             oldProject.setDescription(newProject.getDescription());
+            oldProject.setName(newProject.getName());
             projectService.save(oldProject);
-        } catch (NoSuchElementException e) {
-            e.printStackTrace();
         }
 
         return new ModelAndView("redirect:/projects");
@@ -131,11 +135,28 @@ public class ProjectController {
 
         ModelAndView modelAndView = new ModelAndView("projects/view");
 
-        Project project = projectService.findById(id).get();
-
-        modelAndView.addObject(project);
+        if (projectService.findById(id).isPresent()) {
+            modelAndView.addObject(projectService.findById(id).get());
+        }
 
         return modelAndView;
 
+    }
+
+    @GetMapping("/delete/{id}")
+    ModelAndView delete(@PathVariable Long id) {
+
+        ModelAndView modelAndView = new ModelAndView("projects/view");
+
+        if (projectService.findById(id).isPresent()) {
+            Project project = projectService.findById(id).get();
+            if (!issueService.isProjectAssigned(id)) {
+                projectService.delete(project.getId());
+            }
+
+        }
+
+
+        return modelAndView;
     }
 }

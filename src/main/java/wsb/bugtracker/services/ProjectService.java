@@ -32,6 +32,10 @@ public class ProjectService {
         projectRepository.save(project);
     }
 
+    public Boolean isProjectNameUnique(Project project) {
+        return projectRepository.findByName(project.getName()).isPresent();
+    }
+
     public void delete(Long id) {
         projectRepository.deleteById(id);
     }
@@ -48,4 +52,5 @@ public class ProjectService {
         projectRepository.save(project);
         return projectRepository.findById(project.getId()).get().getId();
     }
+
 }

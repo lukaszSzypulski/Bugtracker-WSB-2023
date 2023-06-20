@@ -40,4 +40,8 @@ public class IssueService {
     public void findByIdAndSetAttachment(Long id) {
         issueRepository.findByIdAndSetAttachment(id);
     }
+
+    public Boolean isProjectAssigned(Long projectId) {
+        return issueRepository.countIssueByProjectId(projectId) != 0;
+    }
 }

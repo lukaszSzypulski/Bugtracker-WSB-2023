@@ -17,34 +17,44 @@
         <form th:action="@{/projects/edit/{id}(id=${project.getId()})}" th:object="${project}" method="post">
 
             <div class="form-group mb-3">
-                <label for="project-id">Id</label>
-                <input type="text" class="form-control-plaintext" id="project-id" th:field="*{id}"
-                       th:class="form-control" disabled>
+                <label for="project-id" th:text="#{project.id}"></label>
+                <input type="text" class="form-control text-muted" id="project-id" th:field="*{id}" readonly>
             </div>
 
             <div class="form-group mb-3">
                 <label for="project-creator" th:text="#{project.creator}"></label>
-                <input type="text" class="form-control-plaintext" id="project-creator" th:class="form-control"
-                       th:field="*{creator.realName}" disabled>
+                <input type="text" class="form-control text-muted" id="project-creator" th:field="*{creator.realName}"
+                       readonly>
             </div>
 
             <div class="form-group mb-3">
                 <label for="project-name" th:text="#{common.name}"></label>
-                <input type="text" class="form-control" th:class="form-control" th:field="*{name}" id="project-name"/>
+                <input type="text" th:class="'form-control' + ${#fields.hasErrors('name') ? ' is-invalid' : ''}"
+                       id="project-name"
+                       th:field="*{name}">
+
+                <small th:errors="*{name}" class="text-danger"
+                       th:if="${#fields.hasErrors('name')}"></small>
 
             </div>
 
             <div class="form-group mb-3">
                 <label for="project-description" th:text="#{common.description}"></label>
 
-                <textarea class="form-control" th:class="form-control" th:field="*{description}" id="project-description" rows="10"
+                <textarea class="form-control" th:class="form-control" th:field="*{description}"
+                          id="project-description" rows="10"
                           th:placeholder="#{common.description}"></textarea>
+            </div>
 
+
+            <div class="form-group mb-3">
+                <label for="date-created" th:text="#{issue.dateCreated}"></label>
+                <input type="text" class="form-control text-muted" id="date-created" th:field="*{dateCreated}" readonly>
             </div>
 
             <div class="col mb-3">
                 <button type="submit" class="btn btn-primary mb-3" th:text="#{common.save}"></button>
-                <a class="btn btn-primary mb-3" onclick="history.back()" th:text="#{common.cancel}"></a>
+                <a th:href="@{/projects}" class="btn btn-primary mb-3" th:text="#{common.cancel}"></a>
             </div>
         </form>
     </section>
