@@ -19,20 +19,50 @@
                 <input type="text" class="form-control" id="userName" th:placeholder="#{common.user}"
                        th:class="'form-control' + ${#fields.hasErrors('username') ? ' is-invalid' : ''}"
                        th:field="*{username}">
+
+                <small
+                        class="text-danger"
+                        th:if="${#fields.hasErrors('username')}"
+                        th:errors="*{username}"
+                ></small>
+
             </div>
 
             <div class="form-group mb-3">
-                <label for="passwordInput" th:text="#{user.password}"></label>
-                <input type="password" class="form-control" id="passwordInput" th:placeholder="#{common.password}"
-                       th:class="'form-control' + ${#fields.hasErrors('password') ? ' is-invalid' : ''}"
-                       th:field="*{password}">
+                <label for="newPasswordInput" th:text="#{user.password.new}"></label>
+                <input type="password" class="form-control" id="newPasswordInput" th:placeholder="#{common.password}"
+                       th:class="form-control + ${#fields.hasErrors('password') ? ' is-invalid' : ''}"
+                       th:field="*{password}"/>
+
+                <small
+                        class="text-danger"
+                        th:if="${#fields.hasErrors('password')}"
+                        th:errors="*{password}"
+                ></small>
+
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="confirmedPasswordInput" th:text="#{user.password.confirm}"></label>
+                <input type="password" class="form-control" id="confirmedPasswordInput"
+                       th:placeholder="#{user.password.confirm}"
+                       th:class="'form-control' + ${#fields.hasErrors('repeatedPassword') ? ' is-invalid' : ''}"
+                       th:field="*{repeatedPassword}"/>
+
+
+                <small
+                        class="text-danger"
+                        th:if="${#fields.hasErrors('repeatedPassword')}"
+                        th:errors="*{repeatedPassword}"
+                ></small>
             </div>
 
             <div class="form-group mb-3">
                 <label for="realName" th:text="#{user.long.name}"></label>
                 <input type="text" class="form-control" id="realName" th:placeholder="#{common.nameAndLast}"
-                       th:class="'form-control' + ${#fields.hasErrors('realName') ? ' is-invalid' : ''}"
+                       th:class="form-control"
                        th:field="*{realName}">
+
             </div>
 
             <div class="form-group mb-3">

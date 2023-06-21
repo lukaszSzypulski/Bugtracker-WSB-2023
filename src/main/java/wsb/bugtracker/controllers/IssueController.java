@@ -7,7 +7,6 @@ import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
 import org.hibernate.envers.query.AuditEntity;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -29,15 +28,12 @@ import wsb.bugtracker.services.PersonService;
 import wsb.bugtracker.services.ProjectService;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Date;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Controller
 @RequestMapping("/issues")
@@ -79,17 +75,7 @@ public class IssueController {
         return modelAndView;
     }
 
-    @GetMapping("/delete/{id}")
-    ModelAndView delete(@PathVariable Long id) {
-        ModelAndView modelAndView = new ModelAndView("issues/index");
-        try {
-            issueService.delete(id);
-        } catch (DataIntegrityViolationException e) {
-            modelAndView.addObject("message", "nie udało się usunąć zgloszenia");
-        }
-        modelAndView.addObject("issue", issueService.findAll());
-        return modelAndView;
-    }
+
 
     @PostMapping("/save")
     ModelAndView save(@ModelAttribute @Valid Issue issue, BindingResult bindingResult) throws IOException {
@@ -102,13 +88,13 @@ public class IssueController {
             return modelAndView;
         }
 
-        if (!issue.getAttachment().isEmpty()) {
-            //TODO: Try catch with FileOutputStream
-            File file = new File("src/main/resources/static/" + issue.getAttachment());
-            OutputStream outputStream = new FileOutputStream(file);
-            outputStream.close();
-        }
-        issue.setAttachment(issue.getAttachment());
+//        if (!issue.getAttachment().isEmpty()) {
+//            //TODO: Try catch with FileOutputStream
+//            File file = new File("src/main/resources/static/" + issue.getAttachment());
+//            OutputStream outputStream = new FileOutputStream(file);
+//            outputStream.close();
+//        }
+//        issue.setAttachment(issue.getAttachment());
         issue.setDateCreated(new Date());
         issue.setLastUpdated(new Date());
         String userLoggedName = (SecurityContextHolder.getContext().getAuthentication().getName());
@@ -143,19 +129,29 @@ public class IssueController {
 
 
     @PostMapping("/edit/{id}")
-    ModelAndView saveEditedIssue(@PathVariable Long id, @ModelAttribute @Valid Issue newIssue) {
+    ModelAndView saveEditedIssue(@PathVariable Long id, @ModelAttribute @Valid Issue newIssue, BindingResult bindingResult) {
 
         ModelAndView modelAndView = new ModelAndView("redirect:/issues");
 
+
+        if (bindingResult.hasErrors()) {
+            modelAndView.setViewName("issues/edit");
+            return modelAndView;
+        }
+
         //TODO: issue do not save new comment
-        try {
-            Issue oldIssue = issueService.findById(newIssue.getId()).get();
 
+        if (issueService.findById(id).isPresent()) {
+            Issue oldIssue = issueService.findById(id).get();
             oldIssue.setLastUpdated(new Date());
-
+            oldIssue.setName(newIssue.getName());
+            oldIssue.setDescription(newIssue.getDescription());
+            oldIssue.setType(newIssue.getType());
+            oldIssue.setPriority(newIssue.getPriority());
+            oldIssue.setStatus(newIssue.getStatus());
+            oldIssue.setAssignee(newIssue.getAssignee());
+            oldIssue.setProject(newIssue.getProject());
             issueService.save(oldIssue);
-        } catch (NoSuchElementException e) {
-            e.printStackTrace();
         }
 
         return modelAndView;
@@ -186,6 +182,25 @@ public class IssueController {
         List<AuditDataDTO> revisions = rawRevisions.stream().map(AuditDataDTO::new).toList();
         modelAndView.addObject("revisions", revisions);
         return modelAndView;
+    }
+
+    @GetMapping("/delete/{id}")
+    ModelAndView delete(@PathVariable Long id, IssueFilter filter, Pageable pageable) {
+        ModelAndView modelAndView = new ModelAndView("issues/index");
+
+        issueService.delete(id);
+
+        Page<Issue> issues = issueService.findAll(filter.buildSpecification(), pageable);
+        modelAndView.addObject("issues", issues);
+        modelAndView.addObject("filter", filter);
+        List<Person> people = personService.findAll();
+        modelAndView.addObject("people", people);
+        List<Project> projects = projectService.findAll();
+        modelAndView.addObject("projects", projects);
+
+
+        return modelAndView;
+
     }
 
     @GetMapping("/deleteFile/{id}")

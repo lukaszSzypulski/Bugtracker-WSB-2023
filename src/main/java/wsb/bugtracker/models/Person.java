@@ -21,9 +21,10 @@ public class Person {
     private Long id;
 
     @Column(nullable = false, unique = true)
+    @NotNull
+    @NotEmpty(message = "{username.notEmpty}")
     private String username;
 
-    @Column(nullable = false)
     @NotNull
     @NotEmpty(message = "{password.notEmpty}")
     private String password;
@@ -31,7 +32,8 @@ public class Person {
     @Transient
     String repeatedPassword;
 
-    @Column(nullable = false, unique = true)
+    @NotNull
+    @NotEmpty(message = "{username.realName.notEmpty}")
     private String realName;
 
     @Email
