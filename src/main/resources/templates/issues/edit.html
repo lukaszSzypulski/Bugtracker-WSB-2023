@@ -83,7 +83,7 @@
 
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
-                    <label class="input-group-text" for="projectSelection" th:text="#{issue.choose.project}"></label>
+                    <label class="input-group-text" for="projectSelection" th:text="#{issue.project}"></label>
                 </div>
                 <select class="form-control" th:field="*{project}" id="projectSelection">
                     <option th:each="proj : ${projects}"

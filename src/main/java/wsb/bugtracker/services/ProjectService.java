@@ -33,7 +33,14 @@ public class ProjectService {
     }
 
     public Boolean isProjectNameUnique(Project project) {
-        return projectRepository.findByName(project.getName()).isPresent();
+        if (projectRepository.findByName(project.getName()).isPresent()) {
+            Project oldProject = projectRepository.findByName(project.getName()).get();
+            if (oldProject.getName().equals(project.getName()) || oldProject.getId().equals(project.getId())) {
+                return true;
+            }
+            ;
+        }
+        return false;
     }
 
     public void delete(Long id) {

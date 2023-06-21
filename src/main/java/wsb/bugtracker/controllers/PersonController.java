@@ -34,19 +34,6 @@ public class PersonController {
         return modelAndView;
     }
 
-    @Secured("ROLE_DELETE_USER")
-    @GetMapping("/delete/{id}")
-    ModelAndView delete(@PathVariable Long id) {
-        ModelAndView modelAndView = new ModelAndView("person/index");
-        try {
-            personService.delete(id);
-        } catch (DataIntegrityViolationException e) {
-            modelAndView.addObject("message", "Nie udało się usunąć użytkownika ponieważ jest używany w innych miejscach systemu");
-        }
-        modelAndView.addObject("people", personService.findAll());
-        return modelAndView;
-    }
-
     @Secured("ROLE_CREATE_USER")
     @GetMapping("/create")
     ModelAndView create() {
@@ -68,8 +55,15 @@ public class PersonController {
 
         ModelAndView modelAndView = new ModelAndView("redirect:/person");
 
-        if (bindingResult.hasErrors()) {
+        List<Authority> authoritiesList = authorityService.findAll();
+
+        modelAndView.addObject("authoritiesList", authoritiesList);
+
+        if (bindingResult.hasErrors() || personService.isUsernameUnique(person)) {
             modelAndView.setViewName("person/create");
+            if (personService.isUsernameUnique(person)) {
+                bindingResult.rejectValue("username", "person.name.unique");
+            }
             return modelAndView;
         }
 
@@ -140,6 +134,19 @@ public class PersonController {
             modelAndView.addObject("person", person);
         }
 
+        return modelAndView;
+    }
+
+    @Secured("ROLE_DELETE_USER")
+    @GetMapping("/delete/{id}")
+    ModelAndView delete(@PathVariable Long id) {
+        ModelAndView modelAndView = new ModelAndView("person/index");
+        try {
+            personService.delete(id);
+        } catch (DataIntegrityViolationException e) {
+            modelAndView.addObject("message", "Nie udało się usunąć użytkownika ponieważ jest używany w innych miejscach systemu");
+        }
+        modelAndView.addObject("people", personService.findAll());
         return modelAndView;
     }
 

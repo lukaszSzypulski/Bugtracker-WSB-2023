@@ -53,18 +53,15 @@ public class PersonService {
         String username = adminUsername;
         String password = adminPass;
 
-        System.out.println("Admin Login: " + adminUsername);
+        System.out.println("Admin Login:" + adminUsername);
         System.out.println("Admin Password:" + adminPass);
 
         Optional<Person> person = personRepository.findByUsername(username);
 
         if (person.isPresent()) {
-            System.out.println("Użytkownik administracyjny już istnieje, przerywamy");
             saveAllAuthorities(person.get());
             return;
         }
-
-        System.out.println("Tworzymy użytkownika administracyjnego...");
 
         Person newPerson = new Person();
         newPerson.setUsername(username);
@@ -85,6 +82,17 @@ public class PersonService {
         person.setAuthorities(authoritySet);
 
         personRepository.save(person);
+    }
+
+    public Boolean isUsernameUnique(Person person) {
+        if (personRepository.findByUsername(person.getUsername()).isPresent()) {
+            Person oldUser = personRepository.findByUsername(person.getUsername()).get();
+            if (oldUser.getUsername().equals(person.getUsername()) || oldUser.getId().equals(person.getId())) {
+                return true;
+            }
+            ;
+        }
+        return false;
     }
 
     public Object findLoggedUserId(@CurrentSecurityContext(expression = "authentication?.name") String loggedUserName) {

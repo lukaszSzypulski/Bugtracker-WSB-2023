@@ -9,7 +9,9 @@
 <body>
 <div class="container">
     <section layout:fragment="custom-content">
+
         <form th:action="@{/issues}" th:object="${filter}" class="row">
+
 
             <div class="col">
                 <a class="btn btn-primary mb-3" type="submit" th:href="@{/issues/create}" th:text="#{issue.new}"></a>
@@ -24,20 +26,7 @@
                             th:text="${pro.getName()}">
                     </option>
                 </select>
-
             </div>
-
-            <div class="col">
-                <select th:field="*{status}"
-                        class="form-control">
-                    <option th:value="${null}" th:text="#{issue.status}"></option>
-                    <option th:each="typ : ${T(wsb.bugtracker.models.Type).values()}"
-                            th:value="${typ}"
-                            th:text="#{'type.' + ${typ}}">
-                    </option>
-                </select>
-            </div>
-
 
             <div class="col">
                 <select th:field="*{assignee}"
@@ -49,6 +38,41 @@
                     ></option>
                 </select>
             </div>
+
+            <div class="col">
+                <select th:field="*{status}"
+                        class="form-control">
+                    <option th:value="${null}" th:text="#{issue.status}"></option>
+                    <option th:each="stat : ${T(wsb.bugtracker.models.Status).values()}"
+                            th:value="${stat}"
+                            th:text="#{'status.' + ${stat}}">
+                    </option>
+                </select>
+            </div>
+
+            <div class="col">
+                <select th:field="*{type}"
+                        class="form-control">
+                    <option th:value="${null}" th:text="#{type.name}"></option>
+                    <option th:each="typ : ${T(wsb.bugtracker.models.Type).values()}"
+                            th:value="${typ}"
+                            th:text="#{'type.' + ${typ}}">
+                    </option>
+                </select>
+            </div>
+
+
+            <div class="col">
+                <select th:field="*{priority}"
+                        class="form-control">
+                    <option th:value="${null}" th:text="#{priority.name}"></option>
+                    <option th:each="prio : ${T(wsb.bugtracker.models.Priority).values()}"
+                            th:value="${prio}"
+                            th:text="#{'priority.' + ${prio}}">
+                    </option>
+                </select>
+            </div>
+
 
             <div class="col">
                 <button type="submit" th:text="#{common.search}"
@@ -78,7 +102,7 @@
                     <div class="d-flex justify-content-end">
                         <div class="p-2 alert alert-success small" th:text="#{'type.' + ${iss.type}}"></div>
                         <div class="p-2 alert alert-primary small" th:text="#{'priority.' + ${iss.priority}}"></div>
-                        <div class="p-2 alert alert-info small" th:text="#{'issue.' +  ${iss.status}}"></div>
+                        <div class="p-2 alert alert-info small" th:text="#{'status.' + ${iss.status}}"></div>
                     </div>
                 </dd>
 

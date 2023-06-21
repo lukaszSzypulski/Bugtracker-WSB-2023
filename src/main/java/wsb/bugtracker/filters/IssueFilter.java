@@ -5,10 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import wsb.bugtracker.models.Issue;
-import wsb.bugtracker.models.Person;
-import wsb.bugtracker.models.Project;
-import wsb.bugtracker.models.Status;
+import wsb.bugtracker.models.*;
 
 @Data
 @NoArgsConstructor
@@ -17,16 +14,18 @@ public class IssueFilter {
 
     private Project project;
     private Person assignee;
-    private String status;
-    private String issueName;
+    private Status status;
+    private Type type;
+    private Priority priority;
 
 
     public Specification<Issue> buildSpecification() {
         return Specification.allOf(
                 equalTo("project", project),
-                equalTo("assignee", assignee)
-//                enumEqual("status", status)
-//                equalTo("status", status)
+                equalTo("assignee", assignee),
+                equalTo("status", status),
+                equalTo("type", type),
+                equalTo("priority", priority)
         );
     }
 
@@ -35,14 +34,6 @@ public class IssueFilter {
             return Specification.where(null);
         }
         return (root, query, builder) -> builder.equal(root.get(property), value);
-    }
-
-    private Specification<Issue> enumEqual(String property, Object value) {
-        if (value == null) {
-            return Specification.where(null);
-        }
-        return (root, query, builder) -> builder.equal(root.get(property), Status.valueOf(value.toString()));
-        //TODO: need to finish filter by STATUS
     }
 
 
