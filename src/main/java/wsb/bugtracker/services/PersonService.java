@@ -8,6 +8,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import wsb.bugtracker.models.Authority;
 import wsb.bugtracker.models.Person;
+import wsb.bugtracker.repositories.AuthorityRepository;
 import wsb.bugtracker.repositories.PersonRepository;
 
 import java.util.HashSet;
@@ -21,7 +22,8 @@ public class PersonService {
 
     final private PersonRepository personRepository;
     final private BCryptPasswordEncoder bCryptPasswordEncoder;
-    final private AuthorityService authorityService;
+    final private AuthorityRepository authorityRepository;
+    //   final private AuthorityService authorityService;
 
     public List<Person> findAll() {
         return personRepository.findAll();
@@ -69,14 +71,13 @@ public class PersonService {
 
         String hashedPassword = bCryptPasswordEncoder.encode(password);
         newPerson.setPassword(hashedPassword);
-
         personRepository.save(newPerson);
 
         saveAllAuthorities(newPerson);
     }
 
     public void saveAllAuthorities(Person person) {
-        List<Authority> authorities = authorityService.findAll();
+        List<Authority> authorities = authorityRepository.findAll();
         Set<Authority> authoritySet = new HashSet<>(authorities);
 
         person.setAuthorities(authoritySet);

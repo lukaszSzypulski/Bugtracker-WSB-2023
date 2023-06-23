@@ -6,12 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
 import org.hibernate.envers.query.AuditEntity;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -27,11 +23,6 @@ import wsb.bugtracker.services.IssueService;
 import wsb.bugtracker.services.PersonService;
 import wsb.bugtracker.services.ProjectService;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Date;
 import java.util.List;
 
@@ -76,35 +67,37 @@ public class IssueController {
     }
 
 
-
     @PostMapping("/save")
-    ModelAndView save(@ModelAttribute @Valid Issue issue, BindingResult bindingResult) throws IOException {
+    ModelAndView save(@ModelAttribute @Valid Issue issue, BindingResult bindingResult, ProjectFilter projectFilter, Pageable pageable) {
 
         ModelAndView modelAndView = new ModelAndView("redirect:/issues");
 
-        if (bindingResult.hasErrors()) {
-            modelAndView.setViewName("issues/create");
-            modelAndView.addObject("issue", issue);
-            return modelAndView;
-        }
+        List<Person> people = personService.findAll();
+        modelAndView.addObject("people", people);
 
-//        if (!issue.getAttachment().isEmpty()) {
-//            //TODO: Try catch with FileOutputStream
-//            File file = new File("src/main/resources/static/" + issue.getAttachment());
-//            OutputStream outputStream = new FileOutputStream(file);
-//            outputStream.close();
-//        }
-//        issue.setAttachment(issue.getAttachment());
+        Page<Project> projects = projectService.findAll(projectFilter.buildSpecification(), pageable);
+        modelAndView.addObject("projects", projects);
+
         issue.setDateCreated(new Date());
         issue.setLastUpdated(new Date());
+
         String userLoggedName = (SecurityContextHolder.getContext().getAuthentication().getName());
 
         if (personService.findByUsername(userLoggedName).isPresent()) {
             issue.setCreator(personService.findByUsername(userLoggedName).get());
         }
 
+        if (bindingResult.hasErrors()) {
+            modelAndView.setViewName("issues/create");
+            modelAndView.addObject("issue", issue);
+            modelAndView.addObject("people", people);
+            modelAndView.addObject("projects", projects);
+            return modelAndView;
+        }
+
         issueService.save(issue);
         return modelAndView;
+
 
     }
 
@@ -138,8 +131,6 @@ public class IssueController {
             modelAndView.setViewName("issues/edit");
             return modelAndView;
         }
-
-        //TODO: issue do not save new comment
 
         if (issueService.findById(id).isPresent()) {
             Issue oldIssue = issueService.findById(id).get();
@@ -200,108 +191,6 @@ public class IssueController {
 
 
         return modelAndView;
-
-    }
-
-    @GetMapping("/deleteFile/{id}")
-    public ModelAndView deleteFile(@PathVariable Long id) {
-
-        Issue issueId = issueService.findById(id).get();
-        ModelAndView modelAndView = new ModelAndView("redirect:/issues/edit/" + issueId.getId());
-
-        //TODO cleanup
-        File file = new File("src/main/resources/static/" + issueId.getAttachment());
-        file.delete();
-        if (issueService.findById(id).isPresent()) {
-            issueService.findByIdAndSetAttachment(id);
-        }
-
-        return modelAndView;
-
-    }
-
-    @GetMapping("/download/{id}")
-    public ResponseEntity downloadFile(@PathVariable Long id) throws IOException {
-        Issue ticket = issueService.findById(id).get();
-
-        File file = new File("src/main/resources/static/" + ticket.getAttachment());
-        Path path = Paths.get(file.getAbsolutePath());
-        ByteArrayResource resource = new ByteArrayResource
-                (Files.readAllBytes(path));
-
-        return ResponseEntity.ok().headers(this.headers(ticket.getAttachment()))
-                .contentLength(file.length())
-                .contentType(MediaType.parseMediaType
-                        ("application/octet-stream")).body(resource);
-    }
-
-//        Issue ticket = issueService.findById(id).get();
-//        File file = new File("src/main/resources/static/" + ticket.getAttachment() );
-//        System.out.println(file.isFile());
-//
-//        HttpHeaders header = new HttpHeaders();
-//        header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=img.jpg");
-//        header.add("Cache-Control", "no-cache, no-store, must-revalidate");
-//        header.add("Pragma", "no-cache");
-//        header.add("Expires", "0");
-//
-//        Path path = Paths.get(file.getAbsolutePath());
-//        ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(path));
-//
-//        return ResponseEntity.ok()
-//                .headers(header)
-//                .contentLength(file.length())
-//                .contentType(MediaType.parseMediaType("application/octet-stream"))
-//                .body(resource);
-
-//    public void downloadFile(@PathVariable Long id, HttpServletResponse response) throws FileNotFoundException {
-//        try {
-//            Issue ticket = issueService.findById(id).get();
-//            String fileName = Paths.get("src/main/resources/static/").resolve(ticket.getAttachment()).toString();
-//            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-//            String headerKey = "Content-Disposition";
-//            String headerValue = String.format("attachment; filename=\"%s\"", fileName);
-//            response.setHeader(headerKey, headerValue);
-//            FileInputStream inputStream;
-//            try {
-//                inputStream = new FileInputStream(fileName);
-//                try {
-//                    int c;
-//                    while ((c = inputStream.read()) != -1) {
-//                        response.getWriter().write(c);
-//                    }
-//                } finally {
-//                    if (inputStream != null)
-//                        try {
-//                            inputStream.close();
-//                        } catch (IOException e) {
-//                            e.printStackTrace();
-//                        }
-//                    response.getWriter().close();
-//                }
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//
-//            }} catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }}
-
-
-    //TODO: in model edit add if issue.getAtt is null do not show btn
-//        Issue issue = issueService.findById(id).get();
-//        return new FileInputStream("src/main/resources/static/" + issue.getAttachment());
-//    }
-
-    private HttpHeaders headers(String name) {
-
-        HttpHeaders header = new HttpHeaders();
-        header.add(HttpHeaders.CONTENT_DISPOSITION,
-                "attachment; filename=" + name);
-        header.add("Cache-Control", "no-cache, no-store,"
-                + " must-revalidate");
-        header.add("Pragma", "no-cache");
-        header.add("Expires", "0");
-        return header;
 
     }
 }
