@@ -1,11 +1,11 @@
 package wsb.bugtracker.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.hibernate.envers.Audited;
 
 import java.util.Date;
-import java.util.List;
 
 import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
 
@@ -18,19 +18,19 @@ public class Issue {
     @GeneratedValue
     private Long id;
 
-    @Column(nullable = false)
+    @NotNull
     @Enumerated(EnumType.STRING)
     private Status status = Status.TODO;
 
-    @Column(nullable = false)
+    @NotNull
     @Enumerated(EnumType.STRING)
     private Priority priority = Priority.NORMAL;
 
-    @Column(nullable = false)
+    @NotNull
     @Enumerated(EnumType.STRING)
     private Type type = Type.TASK;
 
-    @Column(nullable=false)
+    @NotNull
     private String name;
 
     @Column(columnDefinition = "TEXT")
@@ -52,10 +52,7 @@ public class Issue {
     private Date dateCreated;
 
     @Column(nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date lastUpdated;
 
-    @OneToMany
-    private List<Comment> comments;
-
-    private String attachment;
 }

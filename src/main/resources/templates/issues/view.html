@@ -23,6 +23,13 @@
                 </div>
             </div>
 
+            <div class="form-group mb-3">
+                <div class="input-group">
+                    <label class="input-group-text" id="nameId" th:text="#{common.name}"></label>
+                    <input type="text" th:class="form-control" th:field="*{name}" class="form-control">
+                </div>
+            </div>
+
 
             <div class="form-group mb-3">
                 <label class="input-group-text" id="descriptionArea" th:text="#{common.description}"></label>
@@ -82,71 +89,12 @@
                 </div>
             </div>
 
-
-            <!--            COMMENT SECTION-->
-
-
-            <div class="form-group mb-3">
-
-                <div>
-                    <h6 class="fw-bold text-primary mb-1"
-                        th:value="${#dates.format(issue.getDateCreated(), 'dd-MM-yyyy')}"></h6>
-                    <p class="text-muted small mb-0"
-                       th:href="@{/person/view/{id}(id=${@personService.findLoggedUserId(#authentication.name)})}"></p>
-                </div>
-                <label for="textAreaControl"></label>
-                <label class="input-group-text" id="commentSection" th:text="#{issue.comment}"></label>
-                <textarea class="form-control" th:class="form-control" th:field="*{description}" id="commentField"
-                          rows="10"
-                          th:placeholder="#{issue.description}"></textarea>
-
-                <div class="small d-flex justify-content-start">
-                    <a href="#!" class="d-flex align-items-center me-3">
-                        <i class="fa-solid fa-pen-to-square"></i>
-                    </a>
-                </div>
-
-
-                <div class="small d-flex justify-content-start">
-                    <a href="#!" class="d-flex align-items-center me-3">
-                        <i class="fa-solid fa-trash-can"></i>
-                    </a>
-                </div>
-
-
-                <div class="float-end mt-2 pt-1">
-                    <button type="button" class="btn btn-primary btn-sm">Post comment</button>
-                    <button type="button" class="btn btn-outline-primary btn-sm">Cancel</button>
-                </div>
-            </div>
-
-
-            <div class="form-group mb-3" th:if="${issue.attachment}">
-                <a class="btn btn-success" role="button" th:download="${issue.getAttachment()}"
-                   th:href="@{/issues/download/{id}(id=${issue.getId()})}"><span
-                        th:text="#{issue.attachment.view}"></span> </a>
-            </div>
-
             <div class="col">
                 <a th:href="@{/issues}" class="btn btn-primary mb-3" th:text="#{common.cancel}"></a>
             </div>
 
-            <div class="container">
-
-
-                <h2 th:text="#{issue.history}"></h2>
-
-                <div class="row" th:each="revision : ${revisions}">
-                    <span th:text="${revision.getDate()}"></span> |
-                    <span th:text="${revision.getActor()}"></span> |
-                    <span th:text="${revision.getRevisionType()}"></span> |
-                    <span th:text="${revision.getTitle()}"></span> |
-                    <span th:text="${revision.getStatus()}"></span>
-                </div>
-            </div>
-
-
         </form>
+
     </section>
 </div>
 </body>

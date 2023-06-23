@@ -40,8 +40,11 @@ public class IssueFilter {
     public String toQueryString(Integer page, Sort sort) {
         return "page=" + page +
                 "&sort=" + toSortString(sort) +
-                (project != null ? "&project=" + project : "") +
-                (assignee != null ? "&assignee=" + assignee.getId() : "");
+                (project != null ? "&project=" + project.getId() : "") +
+                (assignee != null ? "&assignee=" + assignee.getId() : "") +
+                (status != null ? "&status=" + status.name() : "") +
+                (type != null ? "&type=" + type.name() : "") +
+                (priority != null ? "&priority=" + priority.name() : "");
     }
 
     public String toSortString(Sort sort) {

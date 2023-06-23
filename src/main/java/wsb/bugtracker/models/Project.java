@@ -23,10 +23,10 @@ public class Project {
     @Size(min = 3, max = 10)
     private String name;
 
-    @NotNull
+    @Column(nullable = false)
     private Boolean enabled = true;
 
-    @NotNull
+    @Column(nullable = false)
     @DateTimeFormat(pattern = "dd-MM-yyyy")
     private Date dateCreated;
 

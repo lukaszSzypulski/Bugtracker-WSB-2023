@@ -91,11 +91,11 @@
         </form>
 
         <div class="card mt-4 mb-3" th:each="iss : ${issues}">
-            <h5 class="card-header" th:text="${iss.id} + ' ' + ${iss.name}"></h5>
+            <h5 class="card-header" th:text="${iss.name}"></h5>
 
             <div class="card-body">
-                <dd class="card-text" th:text="#{issue.executor} + ': ' + ${iss.assignee.realName}">
-                </dd>
+                <dd class="card-text" th:text="#{issue.project} + ': ' + ${iss.project.name}"></dd>
+                <dd class="card-text" th:text="#{issue.executor} + ': ' + ${iss.assignee.realName}"></dd>
                 <dd class="card-text"
                     th:text="#{issue.description} + ': ' + ${#strings.abbreviate(iss.getDescription(), 20)}"></dd>
                 <dd class="card-text">
