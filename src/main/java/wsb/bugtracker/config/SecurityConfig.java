@@ -30,7 +30,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         (request) -> request
-                                .requestMatchers("/", "/login", "/static/403-Forbidden.jpeg")
+                                .requestMatchers("/", "/login", "/403-Forbidden.jpeg")
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()
