@@ -8,6 +8,11 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class LoginController {
 
+    @GetMapping("/")
+    ModelAndView defaultPath() {
+        return new ModelAndView("redirect:/login");
+    }
+
     @GetMapping("/login")
     ModelAndView login() {
         return new ModelAndView("general/login");
