@@ -20,15 +20,16 @@
 
             <div class="form-group mb-3">
                 <label for="issueName" th:text="#{issue.name}"></label>
-                <input type="text" class="form-control" id="issueName" th:placeholder="#{issue.name}"
-                       th:class="'form-control' + ${#fields.hasErrors('dateCreated') ? ' is-invalid' : ''}"
+                <input type="text"
+                       th:class="'form-control' + ${#fields.hasErrors('name') ? ' is-invalid' : ''}"
+                       id="issueName"
+                       th:placeholder="#{issue.name}"
                        th:field="*{name}"/>
 
                 <small
                         class="text-danger"
-                        th:if="${#fields.hasErrors('dateCreated')}"
-                        th:errors="*{dateCreated}"
-                ></small>
+                        th:if="${#fields.hasErrors('name')}"
+                        th:errors="*{name}"></small>
             </div>
 
 
@@ -98,18 +99,6 @@
                     </option>
                 </select>
             </div>
-
-            <div class="form-group mb-3">
-                <input type="hidden" th:field="*{dateCreated}" th:name="${#dates.createNow()}"/>
-
-            </div>
-
-            <!--            <div class="form-group mb-3">-->
-            <!--                <input type="hidden" class="form-control" id="updateDate"-->
-            <!--                       th:field="*{lastUpdated}"-->
-            <!--                th:value="${#dates.createNow()}"/>-->
-            <!--            </div>-->
-
 
             <div class="col">
                 <button type="submit" class="btn btn-primary mb-3" th:text="#{common.save}"></button>

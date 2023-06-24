@@ -1,6 +1,7 @@
 package wsb.bugtracker.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.hibernate.envers.Audited;
@@ -31,6 +32,7 @@ public class Issue {
     private Type type = Type.TASK;
 
     @NotNull
+    @NotEmpty(message = "{issue.name.notEmpty}")
     private String name;
 
     @Column(columnDefinition = "TEXT")

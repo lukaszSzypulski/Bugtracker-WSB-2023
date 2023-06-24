@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import wsb.bugtracker.models.Issue;
 import wsb.bugtracker.repositories.IssueRepository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,6 +31,14 @@ public class IssueService {
     }
 
     public void save(Issue issue) {
+        if (issue.getDateCreated() == null || issue.getLastUpdated() == null) {
+            if (issue.getDateCreated() == null) {
+                issue.setDateCreated(new Date());
+            }
+            if (issue.getLastUpdated() == null) {
+                issue.setLastUpdated(new Date());
+            }
+        }
         issueRepository.save(issue);
     }
 
