@@ -11,6 +11,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -21,15 +23,17 @@ public class SecurityConfig {
     private final CustomerUserDetailsService customUserDetailsService;
 
 
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests((request) -> request
-                        .requestMatchers("/", "/login")
-                        .permitAll()
-                        .anyRequest()
-                        .authenticated()
+                .authorizeHttpRequests(
+                        (request) -> request
+                                .requestMatchers("/", "/login", "/static/403-Forbidden.jpeg")
+                                .permitAll()
+                                .anyRequest()
+                                .authenticated()
                 )
                 .formLogin((form) -> form
                         .loginPage("/login")
@@ -44,8 +48,7 @@ public class SecurityConfig {
                         .deleteCookies("JSESSIONID"))
                 .exceptionHandling((exceptionHandling) ->
                         exceptionHandling
-                                .accessDeniedPage("/errors/access-denied")
-                );
+                                .defaultAuthenticationEntryPointFor(new Http403ForbiddenEntryPoint(), new AntPathRequestMatcher("/**")));
 
         return httpSecurity.build();
     }
