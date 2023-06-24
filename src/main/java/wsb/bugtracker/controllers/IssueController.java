@@ -78,21 +78,18 @@ public class IssueController {
         Page<Project> projects = projectService.findAll(projectFilter.buildSpecification(), pageable);
         modelAndView.addObject("projects", projects);
 
-        issue.setDateCreated(new Date());
-        issue.setLastUpdated(new Date());
-
-        String userLoggedName = (SecurityContextHolder.getContext().getAuthentication().getName());
-
-        if (personService.findByUsername(userLoggedName).isPresent()) {
-            issue.setCreator(personService.findByUsername(userLoggedName).get());
-        }
-
         if (bindingResult.hasErrors()) {
             modelAndView.setViewName("issues/create");
             modelAndView.addObject("issue", issue);
             modelAndView.addObject("people", people);
             modelAndView.addObject("projects", projects);
             return modelAndView;
+        }
+
+        String userLoggedName = (SecurityContextHolder.getContext().getAuthentication().getName());
+
+        if (personService.findByUsername(userLoggedName).isPresent()) {
+            issue.setCreator(personService.findByUsername(userLoggedName).get());
         }
 
         issueService.save(issue);
@@ -162,16 +159,6 @@ public class IssueController {
             Issue issue = issueService.findById(id).get();
             modelAndView.addObject("issue", issue);
         }
-
-        AuditReader auditReader = AuditReaderFactory.get(entityManager);
-
-        List<Object[]> rawRevisions = auditReader.createQuery()
-                .forRevisionsOfEntity(Issue.class, false, true)
-                .add(AuditEntity.id().eq(id))
-                .getResultList();
-
-        List<AuditDataDTO> revisions = rawRevisions.stream().map(AuditDataDTO::new).toList();
-        modelAndView.addObject("revisions", revisions);
         return modelAndView;
     }
 
@@ -192,6 +179,22 @@ public class IssueController {
 
         return modelAndView;
 
+    }
+
+    @GetMapping("/history/{id}")
+    ModelAndView history(@PathVariable Long id) {
+        ModelAndView modelAndView = new ModelAndView("issues/history");
+
+        AuditReader auditReader = AuditReaderFactory.get(entityManager);
+
+        List<Object[]> rawRevisions = auditReader.createQuery()
+                .forRevisionsOfEntity(Issue.class, false, true)
+                .add(AuditEntity.id().eq(id))
+                .getResultList();
+
+        List<AuditDataDTO> revisions = rawRevisions.stream().map(AuditDataDTO::new).toList();
+        modelAndView.addObject("revisions", revisions);
+        return modelAndView;
     }
 }
 
