@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" layout:decorate="~{main-layout/mainLayout}"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{issue.edit}"></title>
+</head>
+<body>
+<div class="container">
+
+    <section layout:fragment="custom-content">
+
+        <div class="container">
+
+
+            <h2 th:text="#{issue.history}"></h2>
+
+            <div class="card mt-4 mb-3" th:each="revision : ${revisions}">
+                <div class="card-body">
+                    <dd th:text="#{hisotry.date} + ': ' + ${#dates.format(revision.getDate(), 'HH:mm dd-MM-yyyy')}"></dd>
+                    <dd th:text="#{history.title} + ': ' + ${revision.getTitle()}"></dd>
+                    <dd th:text="#{hisotry.actor} + ': ' +${revision.getActor()}"></dd>
+                    <dd th:text="#{hisotry.modyfication.type} + ': ' +  #{'history.' +${revision.getRevisionType()}}"></dd>
+                </div>
+
+            </div>
+
+            <div class="col mb-3">
+                <a th:href="@{/issues}" class="btn btn-primary mb-3" th:text="#{common.cancel}"></a>
+            </div>
+        </div>
+    </section>
+</div>
+
+</body>
+</html>
