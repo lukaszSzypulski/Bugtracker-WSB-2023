@@ -60,8 +60,14 @@
             <div class="form-group mb-3">
                 <label for="realName" th:text="#{user.long.name}"></label>
                 <input type="text" class="form-control" id="realName" th:placeholder="#{common.nameAndLast}"
-                       th:class="form-control"
+                       th:class="'form-control' + ${#fields.hasErrors('realName') ? ' is-invalid' : ''}"
                        th:field="*{realName}">
+
+                <small
+                        class="text-danger"
+                        th:if="${#fields.hasErrors('realName')}"
+                        th:errors="*{realName}"
+                ></small>
 
             </div>
 
@@ -96,7 +102,7 @@
 
             <div class="col">
                 <button type="submit" class="btn btn-primary mb-3" th:text="#{common.save}"></button>
-                <a class="btn btn-primary mb-3" onclick="history.back()" th:text="#{common.cancel}"></a>
+                <a th:href="@{/person}" class="btn btn-primary mb-3" th:text="#{common.cancel}"></a>
             </div>
 
         </form>

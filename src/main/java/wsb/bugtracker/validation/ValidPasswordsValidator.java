@@ -13,7 +13,7 @@ public class ValidPasswordsValidator implements ConstraintValidator<ValidPasswor
 
     @Override
     public boolean isValid(Person person, ConstraintValidatorContext ctx) {
-        if (person.getPassword() == null || person.getPassword().equals("")) {
+        if (person.getPassword().equals("")) {
             if (person.getId() == null) {
                 ctx.disableDefaultConstraintViolation();
                 ctx.buildConstraintViolationWithTemplate(ctx.getDefaultConstraintMessageTemplate())

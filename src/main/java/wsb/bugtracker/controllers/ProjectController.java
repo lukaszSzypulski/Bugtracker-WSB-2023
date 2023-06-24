@@ -11,10 +11,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import wsb.bugtracker.filters.ProjectFilter;
-import wsb.bugtracker.models.Mail;
+import wsb.bugtracker.models.MailDataDTO;
 import wsb.bugtracker.models.Person;
 import wsb.bugtracker.models.Project;
-import wsb.bugtracker.services.IssueService;
 import wsb.bugtracker.services.MailService;
 import wsb.bugtracker.services.PersonService;
 import wsb.bugtracker.services.ProjectService;
@@ -28,28 +27,20 @@ public class ProjectController {
     final private ProjectService projectService;
     final private PersonService personService;
     final private MailService mailService;
-    final private IssueService issueService;
+    private MailDataDTO mail = new MailDataDTO();
 
     @GetMapping
     ModelAndView index(@ModelAttribute ProjectFilter filter, Pageable pageable) {
         ModelAndView modelAndView = new ModelAndView("projects/index");
-        Page<Project> projects = projectService.findAll(filter.buildSpecification(), pageable);
-        modelAndView.addObject("projects", projects);
-        List<Person> people = personService.findAll();
-        modelAndView.addObject("people", people);
-        modelAndView.addObject("filter", filter);
-        return modelAndView;
+        return getModelAndView(filter, pageable, modelAndView);
     }
 
     @Secured("ROLE_CREATE_PROJECT")
     @GetMapping("/create")
-    ModelAndView create() {
+    ModelAndView create(Project project) {
         ModelAndView modelAndView = new ModelAndView("projects/create");
 
-        Project newProject = new Project();
-        newProject.setEnabled(true);
-
-        modelAndView.addObject("project", newProject);
+        modelAndView.addObject("project", project);
 
         modelAndView.addObject("people", personService.findAll());
 
@@ -61,11 +52,11 @@ public class ProjectController {
     ModelAndView save(@ModelAttribute @Valid Project project, BindingResult bindingResult) {
 
         ModelAndView modelAndView = new ModelAndView("redirect:/projects");
+        modelAndView.addObject("project", project);
+        modelAndView.addObject("people", personService.findAll());
 
         if (bindingResult.hasErrors() || projectService.isProjectNameUnique(project)) {
             modelAndView.setViewName("projects/create");
-            modelAndView.addObject("project", project);
-            modelAndView.addObject("people", personService.findAll());
             if (projectService.isProjectNameUnique(project)) {
                 bindingResult.rejectValue("name", "project.name.unique");
             }
@@ -74,20 +65,10 @@ public class ProjectController {
 
         if (personService.findById(project.getCreator().getId()).isPresent()) {
             Long projectId = projectService.saveAndReturnId(project);
-            String projectUrl = "http://localhost:8080/projects/getProject/" + projectId;
-
-            String emailAddress = personService.findById(project.getCreator().getId()).get().getEmail();
-            String emailSubject = "Dodano nowe zgloszenie numer: " + projectId;
-            String emailContent = "Zajmij sie nim niezwlocznie: " + "<a href='" + projectUrl + "'>" + "Link</a>";
-
-
-            Mail mail = new Mail();
-            mail.setRecipient(emailAddress);
-            mail.setSubject(emailSubject);
-            mail.setContent(emailContent);
-            mailService.sendMail(mail);
-
+            mailSender(project, projectId);
         }
+
+        projectService.save(project);
         return modelAndView;
     }
 
@@ -111,13 +92,9 @@ public class ProjectController {
 
         ModelAndView modelAndView = new ModelAndView("redirect:/projects");
 
-
-        if (bindingResult.hasErrors() || projectService.isProjectNameUnique(newProject)) {
+        if (bindingResult.hasErrors()) {
             modelAndView.setViewName("projects/edit");
             modelAndView.addObject("project", newProject);
-            if (projectService.isProjectNameUnique(newProject)) {
-                bindingResult.rejectValue("name", "project.name.unique");
-            }
             return modelAndView;
         }
 
@@ -128,7 +105,7 @@ public class ProjectController {
             projectService.save(oldProject);
         }
 
-        return new ModelAndView("redirect:/projects");
+        return modelAndView;
     }
 
     @GetMapping("/getProject/{id}")
@@ -137,9 +114,8 @@ public class ProjectController {
         ModelAndView modelAndView = new ModelAndView("projects/view");
 
         if (projectService.findById(id).isPresent()) {
-            modelAndView.addObject(projectService.findById(id).get());
+            modelAndView.addObject("project", projectService.findById(id).get());
         }
-
         return modelAndView;
 
     }
@@ -154,12 +130,29 @@ public class ProjectController {
             modelAndView.addObject("message", "Nie udało się usunąć projektu ponieważ jest używany w innych miejsach systemu");
         }
 
+        return getModelAndView(filter, pageable, modelAndView);
+    }
+
+    private ModelAndView getModelAndView(@ModelAttribute ProjectFilter filter, Pageable pageable, ModelAndView modelAndView) {
         Page<Project> projects = projectService.findAll(filter.buildSpecification(), pageable);
         modelAndView.addObject("projects", projects);
+
         List<Person> people = personService.findAll();
         modelAndView.addObject("people", people);
         modelAndView.addObject("filter", filter);
 
         return modelAndView;
+    }
+
+    private void mailSender(Project project, Long projectId) {
+        String projectUrl = "http://localhost:8080/projects/getProject/" + projectId;
+        String emailAddress = personService.findById(project.getCreator().getId()).get().getEmail();
+        String emailSubject = "Added new project number: " + projectId;
+        String emailContent = "Deal with it immediately: " + "<a href='" + projectUrl + "'>" + "Link</a>";
+
+        mail.setRecipient(emailAddress);
+        mail.setSubject(emailSubject);
+        mail.setContent(emailContent);
+        mailService.sendMail(mail);
     }
 }

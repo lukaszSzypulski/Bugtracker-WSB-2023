@@ -25,9 +25,17 @@ public class ProjectService {
         return projectRepository.findAll(specification, pageable);
     }
 
+    public Optional<Project> findByName(String name) {
+        return projectRepository.findByName(name);
+    }
+
+
     public void save(Project project) {
         if (project.getDateCreated() == null) {
             project.setDateCreated(new Date());
+        }
+        if (project.getEnabled() == null) {
+            project.setEnabled(true);
         }
         projectRepository.save(project);
     }

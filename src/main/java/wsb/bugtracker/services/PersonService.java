@@ -23,7 +23,6 @@ public class PersonService {
     final private PersonRepository personRepository;
     final private BCryptPasswordEncoder bCryptPasswordEncoder;
     final private AuthorityRepository authorityRepository;
-    //   final private AuthorityService authorityService;
 
     public List<Person> findAll() {
         return personRepository.findAll();
@@ -87,8 +86,8 @@ public class PersonService {
 
     public Boolean isUsernameUnique(Person person) {
         if (personRepository.findByUsername(person.getUsername()).isPresent()) {
-            Person oldUser = personRepository.findByUsername(person.getUsername()).get();
-            if (oldUser.getUsername().equals(person.getUsername()) || oldUser.getId().equals(person.getId())) {
+            Person user = personRepository.findByUsername(person.getUsername()).get();
+            if (user.getUsername().equals(person.getUsername()) || user.getId().equals(person.getId())) {
                 return true;
             }
             ;
@@ -98,7 +97,7 @@ public class PersonService {
 
     public Object findLoggedUserId(@CurrentSecurityContext(expression = "authentication?.name") String loggedUserName) {
         if (findByUsername(loggedUserName).isEmpty()) {
-            return new UsernameNotFoundException("Nie znaleziono uzytkownika");
+            return new UsernameNotFoundException("User not found");
         }
         return findByUsername(loggedUserName).get().getId();
     }
