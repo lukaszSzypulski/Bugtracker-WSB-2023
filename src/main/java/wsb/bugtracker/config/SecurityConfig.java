@@ -23,7 +23,6 @@ public class SecurityConfig {
     private final CustomerUserDetailsService customUserDetailsService;
 
 
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity

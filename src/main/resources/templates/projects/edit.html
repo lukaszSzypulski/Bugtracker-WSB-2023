@@ -29,12 +29,7 @@
 
             <div class="form-group mb-3">
                 <label for="project-name" th:text="#{common.name}"></label>
-                <input type="text" th:class="'form-control' + ${#fields.hasErrors('name') ? ' is-invalid' : ''}"
-                       id="project-name"
-                       th:field="*{name}">
-
-                <small th:errors="*{name}" class="text-danger"
-                       th:if="${#fields.hasErrors('name')}"></small>
+                <input type="text" class="form-control text-muted" id="project-name" th:field="*{name}" readonly>
 
             </div>
 

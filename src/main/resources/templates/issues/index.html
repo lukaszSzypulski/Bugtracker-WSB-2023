@@ -108,16 +108,13 @@
 
                 <a class="btn btn-outline-secondary btn-sm"
                    th:href="@{/issues/view/{id}(id=${iss.getId()})}">
-                    <i class="btn-sm fa-solid fa-eye" data-toggle="tooltip" data-placement="bottom"
-                       title="Wyświetl"></i> </a>
+                    <i class="btn-sm fa-solid fa-eye" data-toggle="tooltip" data-placement="bottom"></i> </a>
                 <a class="btn btn-outline-warning btn-sm" th:href="@{/issues/history/{id}(id=${iss.getId()})}"><i
-                        class="fa-solid fa-clock-rotate-left" data-toggle="tooltip" data-placement="bottom"
-                        title="Historia"></i></a>
+                        class="fa-solid fa-clock-rotate-left" data-toggle="tooltip" data-placement="bottom"></i></a>
                 <a class="btn btn-outline-primary btn-sm" th:href="@{/issues/edit/{id}(id=${iss.getId()})}"><i
-                        class="fa-solid fa-user-pen" data-toggle="tooltip" data-placement="bottom"
-                        title="Edytuj"></i></a>
+                        class="fa-solid fa-user-pen" data-toggle="tooltip" data-placement="bottom"></i></a>
                 <a class="btn btn-outline-danger btn-sm" th:href="@{/issues/delete/{id}(id=${iss.getId()})}"><i
-                        class="fa-solid fa-trash" data-toggle="tooltip" data-placement="bottom" title="Usuń"></i></a>
+                        class="fa-solid fa-trash" data-toggle="tooltip" data-placement="bottom"></i></a>
             </div>
         </div>
 

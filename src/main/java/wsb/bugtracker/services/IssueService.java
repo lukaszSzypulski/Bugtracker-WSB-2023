@@ -9,7 +9,6 @@ import wsb.bugtracker.models.Issue;
 import wsb.bugtracker.repositories.IssueRepository;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -18,9 +17,6 @@ public class IssueService {
 
     private final IssueRepository issueRepository;
 
-    public List<Issue> findAll() {
-        return issueRepository.findAll();
-    }
 
     public Page<Issue> findAll(Specification<Issue> specification, Pageable pageable) {
         return issueRepository.findAll(specification, pageable);
@@ -46,7 +42,4 @@ public class IssueService {
         return issueRepository.findById(id);
     }
 
-    public void findByIdAndSetAttachment(Long id) {
-        issueRepository.findByIdAndSetAttachment(id);
-    }
 }

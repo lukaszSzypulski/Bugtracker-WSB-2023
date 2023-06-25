@@ -39,23 +39,14 @@ public class IssueController {
     @GetMapping
     ModelAndView index(@ModelAttribute IssueFilter filter, Pageable pageable) {
         ModelAndView modelAndView = new ModelAndView("issues/index");
-
-        Page<Issue> issues = issueService.findAll(filter.buildSpecification(), pageable);
-        modelAndView.addObject("issues", issues);
-        modelAndView.addObject("filter", filter);
-        List<Person> people = personService.findAll();
-        modelAndView.addObject("people", people);
-        List<Project> projects = projectService.findAll();
-        modelAndView.addObject("projects", projects);
-        return modelAndView;
+        return getModelAndView(filter, pageable, modelAndView);
     }
 
     @GetMapping("/create")
-    ModelAndView create(@ModelAttribute ProjectFilter projectFilter, Pageable pageable) {
+    ModelAndView create(@ModelAttribute Issue issue, ProjectFilter projectFilter, Pageable pageable) {
 
-        Issue newIssue = new Issue();
         ModelAndView modelAndView = new ModelAndView("issues/create");
-        modelAndView.addObject("issue", newIssue);
+        modelAndView.addObject("issue", issue);
 
         List<Person> people = personService.findAll();
         modelAndView.addObject("people", people);
@@ -78,13 +69,6 @@ public class IssueController {
         Page<Project> projects = projectService.findAll(projectFilter.buildSpecification(), pageable);
         modelAndView.addObject("projects", projects);
 
-        if (bindingResult.hasErrors()) {
-            modelAndView.setViewName("issues/create");
-            modelAndView.addObject("issue", issue);
-            modelAndView.addObject("people", people);
-            modelAndView.addObject("projects", projects);
-            return modelAndView;
-        }
 
         String userLoggedName = (SecurityContextHolder.getContext().getAuthentication().getName());
 
@@ -103,18 +87,7 @@ public class IssueController {
 
         ModelAndView modelAndView = new ModelAndView("issues/edit");
 
-        List<Person> people = personService.findAll();
-        modelAndView.addObject("people", people);
-
-        Page<Project> projects = projectService.findAll(projectFilter.buildSpecification(), pageable);
-        modelAndView.addObject("projects", projects);
-
-        if (issueService.findById(id).isPresent()) {
-            Issue issue = issueService.findById(id).get();
-            modelAndView.addObject("issue", issue);
-        }
-
-        return modelAndView;
+        return getModelAndView(id, projectFilter, pageable, modelAndView);
     }
 
 
@@ -122,7 +95,6 @@ public class IssueController {
     ModelAndView saveEditedIssue(@PathVariable Long id, @ModelAttribute @Valid Issue newIssue, BindingResult bindingResult) {
 
         ModelAndView modelAndView = new ModelAndView("redirect:/issues");
-
 
         if (bindingResult.hasErrors()) {
             modelAndView.setViewName("issues/edit");
@@ -150,16 +122,7 @@ public class IssueController {
 
         ModelAndView modelAndView = new ModelAndView("issues/view");
 
-        List<Person> people = personService.findAll();
-        modelAndView.addObject("people", people);
-
-        Page<Project> projects = projectService.findAll(projectFilter.buildSpecification(), pageable);
-        modelAndView.addObject("projects", projects);
-        if (issueService.findById(id).isPresent()) {
-            Issue issue = issueService.findById(id).get();
-            modelAndView.addObject("issue", issue);
-        }
-        return modelAndView;
+        return getModelAndView(id, projectFilter, pageable, modelAndView);
     }
 
     @GetMapping("/delete/{id}")
@@ -168,16 +131,7 @@ public class IssueController {
 
         issueService.delete(id);
 
-        Page<Issue> issues = issueService.findAll(filter.buildSpecification(), pageable);
-        modelAndView.addObject("issues", issues);
-        modelAndView.addObject("filter", filter);
-        List<Person> people = personService.findAll();
-        modelAndView.addObject("people", people);
-        List<Project> projects = projectService.findAll();
-        modelAndView.addObject("projects", projects);
-
-
-        return modelAndView;
+        return getModelAndView(filter, pageable, modelAndView);
 
     }
 
@@ -194,6 +148,35 @@ public class IssueController {
 
         List<AuditDataDTO> revisions = rawRevisions.stream().map(AuditDataDTO::new).toList();
         modelAndView.addObject("revisions", revisions);
+        return modelAndView;
+    }
+
+    private ModelAndView getModelAndView(@ModelAttribute IssueFilter filter, Pageable pageable, ModelAndView modelAndView) {
+        Page<Issue> issues = issueService.findAll(filter.buildSpecification(), pageable);
+        modelAndView.addObject("issues", issues);
+        modelAndView.addObject("filter", filter);
+
+        List<Person> people = personService.findAll();
+        modelAndView.addObject("people", people);
+
+        List<Project> projects = projectService.findAll();
+        modelAndView.addObject("projects", projects);
+
+        return modelAndView;
+    }
+
+    private ModelAndView getModelAndView(@PathVariable("id") Long id, @ModelAttribute ProjectFilter projectFilter, Pageable pageable, ModelAndView modelAndView) {
+        List<Person> people = personService.findAll();
+        modelAndView.addObject("people", people);
+
+        Page<Project> projects = projectService.findAll(projectFilter.buildSpecification(), pageable);
+        modelAndView.addObject("projects", projects);
+
+        if (issueService.findById(id).isPresent()) {
+            Issue issue = issueService.findById(id).get();
+            modelAndView.addObject("issue", issue);
+        }
+
         return modelAndView;
     }
 }

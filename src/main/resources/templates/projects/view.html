@@ -4,14 +4,14 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
     <meta charset="UTF-8">
-    <title th:text="Szczegóły"></title>
+    <title th:text="#{common.details}"></title>
 </head>
 <body>
 <div class="container">
 
     <section layout:fragment="custom-content">
 
-        <h1 th:text="Szczegóły"></h1>
+        <h1 th:text="#{common.details}"></h1>
 
 
         <form th:action="@{/projects/getProject/{id}(id=${project.getId()})}" th:object="${project}" method="get">

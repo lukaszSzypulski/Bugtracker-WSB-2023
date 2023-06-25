@@ -79,17 +79,7 @@ public class PersonController {
 
         ModelAndView modelAndView = new ModelAndView("person/edit");
 
-        List<Authority> authoritiesList = authorityService.findAll();
-
-        modelAndView.addObject("authoritiesList", authoritiesList);
-
-
-        if (personService.findById(id).isPresent()) {
-            Person person = personService.findById(id).get();
-            modelAndView.addObject("person", person);
-        }
-
-        return modelAndView;
+        return getModelAndView(id, modelAndView);
     }
 
 
@@ -107,8 +97,8 @@ public class PersonController {
             return modelAndView;
         }
 
-        if (personService.findById(newPerson.getId()).isPresent()) {
-            Person oldPerson = personService.findById(newPerson.getId()).get();
+        if (personService.findById(id).isPresent()) {
+            Person oldPerson = personService.findById(id).get();
             oldPerson.setRealName(newPerson.getRealName());
 
             String hashedPassword = bCryptPasswordEncoder.encode(newPerson.getPassword());
@@ -125,16 +115,7 @@ public class PersonController {
     ModelAndView view(@PathVariable Long id) {
         ModelAndView modelAndView = new ModelAndView("person/view");
 
-        List<Authority> authoritiesList = authorityService.findAll();
-
-        modelAndView.addObject("authoritiesList", authoritiesList);
-
-        if (personService.findById(id).isPresent()) {
-            Person person = personService.findById(id).get();
-            modelAndView.addObject("person", person);
-        }
-
-        return modelAndView;
+        return getModelAndView(id, modelAndView);
     }
 
     @Secured("ROLE_DELETE_USER")
@@ -150,4 +131,17 @@ public class PersonController {
         return modelAndView;
     }
 
+
+    private ModelAndView getModelAndView(@PathVariable Long id, ModelAndView modelAndView) {
+        List<Authority> authoritiesList = authorityService.findAll();
+
+        modelAndView.addObject("authoritiesList", authoritiesList);
+
+
+        if (personService.findById(id).isPresent()) {
+            modelAndView.addObject("person", personService.findById(id).get());
+        }
+
+        return modelAndView;
+    }
 }
